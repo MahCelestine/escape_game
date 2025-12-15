@@ -1,8 +1,5 @@
-import { useRef, useEffect, useState } from "react";
-import "../App.css";
-import { useRef, useEffect } from "react";
-import { createTimer } from "animejs";
-import "../App.css";
+import { useRef, useEffect, useState } from 'react';
+import '../App.css';
 
 function Timer() {
   const timeRef = useRef(null);
@@ -19,22 +16,21 @@ function Timer() {
 
   // Initialisation au chargement
   useEffect(() => {
-    const savedState = localStorage.getItem("timerState");
-
+    const savedState = localStorage.getItem('timerState');
+    
     if (savedState) {
-      const { savedRemainingTime, savedIsRunning, savedTimestamp } =
-        JSON.parse(savedState);
+      const { savedRemainingTime, savedIsRunning, savedTimestamp } = JSON.parse(savedState);
       const now = Date.now();
       const timeElapsed = now - savedTimestamp;
-
+      
       let adjustedRemainingTime = Math.max(0, savedRemainingTime - timeElapsed);
-
+      
       if (adjustedRemainingTime <= 0) {
         setRemainingTime(20 * 60 * 1000);
-        localStorage.removeItem("timerState");
+        localStorage.removeItem('timerState');
       } else {
         setRemainingTime(adjustedRemainingTime);
-
+        
         if (savedIsRunning) {
           // Si le timer était en cours, le reprendre automatiquement
           setHasStarted(true);
@@ -49,9 +45,7 @@ function Timer() {
     if (timeRef.current) {
       const minutes = Math.floor(time / 60000);
       const seconds = Math.floor((time % 60000) / 1000);
-      timeRef.current.textContent = `${minutes
-        .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      timeRef.current.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
   };
 
@@ -60,28 +54,28 @@ function Timer() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-
+    
     // Initialiser le temps de départ
     const initialTime = startTime !== null ? startTime : remainingTime;
     startTimeRef.current = Date.now() - (20 * 60 * 1000 - initialTime);
-
+    
     setIsRunning(true);
     setHasStarted(true);
-
+    
     // Lancer l'intervalle
     intervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startTimeRef.current;
       const newRemainingTime = Math.max(0, 20 * 60 * 1000 - elapsed);
-
+      
       setRemainingTime(newRemainingTime);
-
+      
       // Sauvegarder l'état
       saveTimerState(newRemainingTime, true);
-
+      
       if (newRemainingTime <= 0) {
         clearInterval(intervalRef.current);
         setIsRunning(false);
-        localStorage.removeItem("timerState");
+        localStorage.removeItem('timerState');
       }
     }, 100);
   };
@@ -91,33 +85,10 @@ function Timer() {
     const timerState = {
       savedRemainingTime: time,
       savedIsRunning: running,
-      savedTimestamp: Date.now(),
+      savedTimestamp: Date.now()
     };
-    localStorage.setItem("timerState", JSON.stringify(timerState));
+    localStorage.setItem('timerState', JSON.stringify(timerState));
   };
-  const totalMinutes = 20;
-  const totalMilliseconds = totalMinutes * 60 * 1000;
-
-  const timer = createTimer({
-    duration: totalMilliseconds,
-    onUpdate: (self) => {
-      const remainingTime = totalMilliseconds - self.currentTime;
-      const minutes = Math.floor(remainingTime / 60000);
-      const seconds = Math.floor((remainingTime % 60000) / 1000);
-      if (timeRef.current) {
-        timeRef.current.textContent = `${minutes
-          .toString()
-          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-      }
-    },
-    onComplete: () => {
-      if (timeRef.current) {
-        timeRef.current.textContent = "00:00";
-      }
-    },
-  });
-
-  timerRef.current = timer;
 
   // Nettoyage
   useEffect(() => {
@@ -131,15 +102,21 @@ function Timer() {
   return (
     <div>
       <p ref={timeRef}>20:00</p>
-      <div style={{ marginTop: "20px" }}>
-        {!hasStarted && <button onClick={startTimer}>Démarrer le timer</button>}
+      <div style={{ marginTop: '20px' }}>
+        {!hasStarted && (
+          <button onClick={startTimer}>
+            Démarrer le timer
+          </button>
+        )}
         {hasStarted && isRunning && (
-          <p style={{ color: "green", fontWeight: "bold" }}>
+          <p style={{ color: 'green', fontWeight: 'bold' }}>
             Timer en cours...
           </p>
         )}
         {hasStarted && !isRunning && remainingTime <= 0 && (
-          <p style={{ color: "red", fontWeight: "bold" }}>Timer terminé !</p>
+          <p style={{ color: 'red', fontWeight: 'bold' }}>
+            Timer terminé !
+          </p>
         )}
       </div>
     </div>
