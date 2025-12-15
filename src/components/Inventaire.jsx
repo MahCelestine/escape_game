@@ -1,11 +1,7 @@
-import '../App.css'
+import "../App.css";
 
 function Inventaire() {
-  return (
-    <>
-    <h2></h2>
-    </>
-  )
+  return <></>;
 }
 
-export default Inventaire
+export default Inventaire;

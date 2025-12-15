@@ -1,3 +1,16 @@
+import galleryBg from "../assets/img/gallery.png";
+import officeBg from "../assets/img/desk.png";
+import storageBg from "../assets/img/reserve.png";
+import lobbyBg from "../assets/img/entrance.png";
+import lockersBg from "../assets/img/vestiaires.png";
+import surveillanceBg from "../assets/img/surveillance.png";
+import basementBg from "../assets/img/cave.png";
+
+export const GAME_CONFIG = {
+  startingRoom: "gallery", // Le joueur commence ici
+  maxInventorySlots: 7,
+};
+
 // --- BASE DE DONNÉES DES ITEMS (BUTIN & OBJETS DE QUÊTE) ---
 // type: 'loot' (score) ou 'key' (utile pour avancer) ou 'clue' (indice)
 export const ITEMS_DB = {
@@ -6,7 +19,7 @@ export const ITEMS_DB = {
     id: "diamond",
     name: "Diamant Noir",
     type: "loot",
-    value: 15000,
+    value: 25000,
     image: "/assets/icons/diamond.png", // Chemin vers ton icône
     description: "Un diamant d'une pureté exceptionnelle volé au directeur.",
   },
@@ -14,7 +27,7 @@ export const ITEMS_DB = {
     id: "necklace",
     name: "Collier de la Reine",
     type: "loot",
-    value: 12500,
+    value: 26000,
     image: "/assets/icons/necklace.png",
     description: "Des rubis sertis d'or. Très lourd.",
   },
@@ -30,7 +43,7 @@ export const ITEMS_DB = {
     id: "fetish",
     name: "Fétiche Doré",
     type: "loot",
-    value: 8000,
+    value: 13000,
     image: "/assets/icons/fetish.png",
     description: "Une statuette rituelle en or massif.",
   },
@@ -38,7 +51,7 @@ export const ITEMS_DB = {
     id: "fossil",
     name: "Doigt Fossilisé",
     type: "loot",
-    value: 4500,
+    value: 10500,
     image: "/assets/icons/fossil.png",
     description: "C'est dégoûtant, mais ça vaut une fortune au marché noir.",
   },
@@ -46,7 +59,7 @@ export const ITEMS_DB = {
     id: "coin",
     name: "Drachme Antique",
     type: "loot",
-    value: 2500,
+    value: 5500,
     image: "/assets/icons/coin.png",
     description: "Une petite pièce rare retrouvée sous une étagère.",
   },
@@ -73,7 +86,7 @@ export const ROOMS_DATA = {
   gallery: {
     id: "gallery",
     name: "Grande Galerie",
-    background: "/assets/images/gallery_bg.jpg", // Image générée
+    background: galleryBg, // Image générée
     exits: [
       {
         target: "office",
@@ -107,7 +120,7 @@ export const ROOMS_DATA = {
   office: {
     id: "office",
     name: "Bureau du Directeur",
-    background: "/assets/images/office_bg.jpg",
+    background: officeBg,
     exits: [
       {
         target: "gallery",
@@ -143,7 +156,7 @@ export const ROOMS_DATA = {
   storage: {
     id: "storage",
     name: "Réserve",
-    background: "/assets/images/storage_bg.jpg",
+    background: storageBg,
     exits: [
       {
         target: "gallery",
@@ -189,7 +202,7 @@ export const ROOMS_DATA = {
   lobby: {
     id: "lobby",
     name: "Hall d'Accueil",
-    background: "/assets/images/lobby_bg.jpg",
+    background: lobbyBg,
     exits: [
       {
         target: "gallery",
@@ -224,7 +237,7 @@ export const ROOMS_DATA = {
   lockers: {
     id: "lockers",
     name: "Vestiaires du Personnel",
-    background: "/assets/images/lockers_bg.jpg",
+    background: lockersBg,
     exits: [
       {
         target: "lobby",
@@ -251,7 +264,7 @@ export const ROOMS_DATA = {
   surveillance: {
     id: "surveillance",
     name: "Salle de Sécurité",
-    background: "/assets/images/surveillance_bg.jpg",
+    background: surveillanceBg,
     exits: [
       {
         target: "office",
@@ -273,7 +286,7 @@ export const ROOMS_DATA = {
   basement: {
     id: "basement",
     name: "Tunnel de Maintenance",
-    background: "/assets/images/basement_bg.jpg",
+    background: basementBg,
     exits: [
       {
         target: "storage",

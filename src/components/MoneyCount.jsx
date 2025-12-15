@@ -1,10 +1,7 @@
-import '../App.css'
+import "../App.css";
 
 function MoneyCount() {
-  return (
-    <>
-    </>
-  )
+  return <></>;
 }
 
-export default MoneyCount
+export default MoneyCount;
