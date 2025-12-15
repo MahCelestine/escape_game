@@ -1,47 +1,137 @@
-import { useRef, useEffect } from 'react';
-import { createTimer } from 'animejs';
+import { useRef, useEffect, useState } from 'react';
 import '../App.css';
 
 function Timer() {
   const timeRef = useRef(null);
-  const timerRef = useRef(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(20 * 60 * 1000);
+  const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
 
+  // Mettre à jour l'affichage quand remainingTime change
   useEffect(() => {
-    if (timeRef.current) {
-      const totalMinutes = 20;
-      const totalMilliseconds = totalMinutes * 60 * 1000;
+    updateDisplay(remainingTime);
+  }, [remainingTime]);
 
-      const timer = createTimer({
-        duration: totalMilliseconds,
-        onUpdate: self => {
-          const remainingTime = totalMilliseconds - self.currentTime;
-          const minutes = Math.floor(remainingTime / 60000);
-          const seconds = Math.floor((remainingTime % 60000) / 1000);
-          if (timeRef.current) {
-            timeRef.current.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          }
-        },
-        onComplete: () => {
-          if (timeRef.current) {
-            timeRef.current.textContent = "00:00";
-          }
+  // Initialisation au chargement
+  useEffect(() => {
+    const savedState = localStorage.getItem('timerState');
+    
+    if (savedState) {
+      const { savedRemainingTime, savedIsRunning, savedTimestamp } = JSON.parse(savedState);
+      const now = Date.now();
+      const timeElapsed = now - savedTimestamp;
+      
+      let adjustedRemainingTime = Math.max(0, savedRemainingTime - timeElapsed);
+      
+      if (adjustedRemainingTime <= 0) {
+        setRemainingTime(20 * 60 * 1000);
+        localStorage.removeItem('timerState');
+      } else {
+        setRemainingTime(adjustedRemainingTime);
+        
+        if (savedIsRunning) {
+          startTimer(adjustedRemainingTime);
         }
-      });
-
-      timerRef.current = timer;
-
-      // Nettoyage
-      return () => {
-        if (timerRef.current) {
-          timerRef.current.pause();
-        }
-      };
+      }
     }
+  }, []);
+
+  // Mettre à jour l'affichage
+  const updateDisplay = (time) => {
+    if (timeRef.current) {
+      const minutes = Math.floor(time / 60000);
+      const seconds = Math.floor((time % 60000) / 1000);
+      timeRef.current.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+  };
+
+  // Démarrer le timer
+  const startTimer = (startTime = null) => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    
+    // Initialiser le temps de départ
+    const initialTime = startTime !== null ? startTime : remainingTime;
+    startTimeRef.current = Date.now() - (20 * 60 * 1000 - initialTime);
+    
+    setIsRunning(true);
+    
+    // Lancer l'intervalle
+    intervalRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTimeRef.current;
+      const newRemainingTime = Math.max(0, 20 * 60 * 1000 - elapsed);
+      
+      setRemainingTime(newRemainingTime);
+      
+      // Sauvegarder l'état
+      saveTimerState(newRemainingTime, true);
+      
+      if (newRemainingTime <= 0) {
+        clearInterval(intervalRef.current);
+        setIsRunning(false);
+        localStorage.removeItem('timerState');
+      }
+    }, 100);
+  };
+
+  // Sauvegarder l'état du timer
+  const saveTimerState = (time, running) => {
+    const timerState = {
+      savedRemainingTime: time,
+      savedIsRunning: running,
+      savedTimestamp: Date.now()
+    };
+    localStorage.setItem('timerState', JSON.stringify(timerState));
+  };
+
+  // Gérer le bouton Démarrer/Pause
+  const toggleTimer = () => {
+    if (!isRunning) {
+      startTimer();
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      setIsRunning(false);
+      saveTimerState(remainingTime, false);
+    }
+  };
+
+  // Réinitialiser le timer
+  const resetTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    
+    setRemainingTime(20 * 60 * 1000);
+    setIsRunning(false);
+    localStorage.removeItem('timerState');
+  };
+
+  // Nettoyage
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
 
   return (
     <div>
       <p ref={timeRef}>20:00</p>
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={toggleTimer} style={{ marginRight: '10px' }}>
+          {isRunning ? 'Pause' : 'Démarrer'}
+        </button>
+        <button onClick={resetTimer}>
+          Réinitialiser
+        </button>
+      </div>
     </div>
   );
 }
