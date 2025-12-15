@@ -7,6 +7,7 @@ function Timer() {
   const [remainingTime, setRemainingTime] = useState(20 * 60 * 1000);
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const [hasStarted, setHasStarted] = useState(false);
 
   // Mettre à jour l'affichage quand remainingTime change
   useEffect(() => {
@@ -31,6 +32,8 @@ function Timer() {
         setRemainingTime(adjustedRemainingTime);
         
         if (savedIsRunning) {
+          // Si le timer était en cours, le reprendre automatiquement
+          setHasStarted(true);
           startTimer(adjustedRemainingTime);
         }
       }
@@ -57,6 +60,7 @@ function Timer() {
     startTimeRef.current = Date.now() - (20 * 60 * 1000 - initialTime);
     
     setIsRunning(true);
+    setHasStarted(true);
     
     // Lancer l'intervalle
     intervalRef.current = setInterval(() => {
@@ -86,32 +90,6 @@ function Timer() {
     localStorage.setItem('timerState', JSON.stringify(timerState));
   };
 
-  // Gérer le bouton Démarrer/Pause
-  const toggleTimer = () => {
-    if (!isRunning) {
-      startTimer();
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      setIsRunning(false);
-      saveTimerState(remainingTime, false);
-    }
-  };
-
-  // Réinitialiser le timer
-  const resetTimer = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    
-    setRemainingTime(20 * 60 * 1000);
-    setIsRunning(false);
-    localStorage.removeItem('timerState');
-  };
-
   // Nettoyage
   useEffect(() => {
     return () => {
@@ -125,12 +103,21 @@ function Timer() {
     <div>
       <p ref={timeRef}>20:00</p>
       <div style={{ marginTop: '20px' }}>
-        <button onClick={toggleTimer} style={{ marginRight: '10px' }}>
-          {isRunning ? 'Pause' : 'Démarrer'}
-        </button>
-        <button onClick={resetTimer}>
-          Réinitialiser
-        </button>
+        {!hasStarted && (
+          <button onClick={startTimer}>
+            Démarrer le timer
+          </button>
+        )}
+        {hasStarted && isRunning && (
+          <p style={{ color: 'green', fontWeight: 'bold' }}>
+            Timer en cours...
+          </p>
+        )}
+        {hasStarted && !isRunning && remainingTime <= 0 && (
+          <p style={{ color: 'red', fontWeight: 'bold' }}>
+            Timer terminé !
+          </p>
+        )}
       </div>
     </div>
   );
