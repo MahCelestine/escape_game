@@ -1,0 +1,183 @@
+/* Homepage.css */
+
+/* --- Conteneur principal (Plein écran) --- */
+.home-container {
+  position: fixed;
+  inset: 0; /* Raccourci pour top:0, right:0, bottom:0, left:0 */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  overflow: hidden;
+  font-family: sans-serif; /* Tu peux changer la police ici */
+  z-index: 50;
+}
+
+/* --- Image de fond --- */
+.home-bg-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+/* --- Overlay sombre --- */
+.home-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+/* --- Contenu Central --- */
+.home-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 1rem;
+  max-width: 56rem; /* équivalent max-w-4xl */
+  width: 100%;
+}
+
+/* --- Titres --- */
+.home-title {
+  font-size: 3rem; /* text-5xl */
+  font-weight: bold;
+  color: white;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+/* Responsive pour grand écran */
+@media (min-width: 768px) {
+  .home-title {
+    font-size: 4.5rem; /* text-7xl */
+  }
+  .home-subtitle {
+    font-size: 1.875rem; /* text-3xl */
+  }
+}
+
+.home-subtitle {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 300;
+  color: #eab308; /* Le jaune "yellow-500" de Tailwind */
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+/* Effet Glow doré */
+.glow-gold {
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.5), 
+               0 0 20px rgba(234, 179, 8, 0.3);
+}
+
+/* --- Description --- */
+.home-description {
+  color: #e5e7eb; /* Gris clair */
+  max-width: 28rem;
+  margin: 0 auto 2rem auto;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+/* --- Timer --- */
+.timer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.timer-box {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  display: inline-block;
+  backdrop-filter: blur(4px);
+}
+
+.timer-digits {
+  font-family: monospace; /* Police style numérique */
+  font-size: 1.875rem;
+  color: #ef4444; /* Rouge alerte */
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+.timer-label {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* --- Bouton --- */
+.start-button {
+  background-color: #eab308;
+  color: black;
+  padding: 1rem 3rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+}
+
+.start-button:hover {
+  background-color: #facc15; /* Jaune plus clair au survol */
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(234, 179, 8, 0.2);
+}
+
+.btn-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* --- Statistiques --- */
+.stats-container {
+  margin-top: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  color: #eab308;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+/* --- Animation --- */
+.fade-in {
+  animation: fadeIn 1.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
