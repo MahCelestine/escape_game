@@ -3,13 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import JeuPrincipal from "./pages/JeuPrincipal";
 import Timer from "./components/Timer";
 import EcranFin from "./pages/EcranFin";
+import Homepage from "./pages/Homepage"
 
 // import EcranFin from "./pages/EcranFin"; // Tu peux décommenter quand tu l'auras créé
 
 function App() {
   return (
     <Routes>
-      <Route path="/a" element={<Timer />} />
+      <Route path="/a" element={<Homepage />} />
       <Route path="/" element={<JeuPrincipal />} />
       <Route path="/fin" element={<EcranFin />} />
     </Routes>

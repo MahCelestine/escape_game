@@ -7,9 +7,9 @@ function Homepage() {
   return (
     <>
       <Header />
-      <Timer />
+      <h1>test</h1>
       <Footer />
-    </>
+</>
   );
 }
 
