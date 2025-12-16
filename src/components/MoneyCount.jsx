@@ -5,9 +5,8 @@ const MoneyCount = ({ items = [] }) => {
   const total = items.reduce((sum, item) => sum + (item.value || 0), 0);
 
  return (
-    <div className="money-count">
-      <span className="money-label">Argent total : </span>
-      <span className="money-value">{formatPrice(total)}</span>
+    <div style={{backgroundColor: "rgba(0,0,0,0.6)",padding:"1%", borderRadius:"5px"}}>
+      <p>{formatPrice(total)}</p>
     </div>
   );
 };
