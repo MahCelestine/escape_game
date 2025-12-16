@@ -2,6 +2,7 @@ import React, { useState } from "react"; // J'ai retiré useEffect car on ne s'e
 import VueSalle from "../components/VueSalle";
 import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
+import HUD from "../components/HUD"
 
 function JeuPrincipal() {
   // --- 1. LES ÉTATS (STATE) ---
@@ -78,7 +79,7 @@ function JeuPrincipal() {
       {/* HUD SIMPLIFIÉ (Sans Chrono) */}
 
       {/* Ici on mettra le composant HUD avec le timer et le conteur des points */}
-      {/* <div
+      <div
         style={{
           position: "absolute",
           top: 10,
@@ -90,13 +91,16 @@ function JeuPrincipal() {
           borderRadius: "8px",
         }}
       >
-        <div>
+              <HUD items={inventory} />
+        {/* <div>
           Sac : {inventory.length} / {GAME_CONFIG.maxInventorySlots} objets
         </div>
         <div>
           Valeur : ${inventory.reduce((total, item) => total + item.value, 0)}
-        </div>
-      </div> */}
+        </div> */}
+      </div>
+
+
       <Inventaire items={inventory} />
 
       {/* LA VUE DE LA SALLE */}

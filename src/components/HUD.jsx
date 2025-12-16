@@ -2,11 +2,11 @@ import '../App.css'
 import Timer from './Timer'
 import MoneyCount from './MoneyCount'
 
-function HUD() {
+function HUD({items = []}) {
     return (
         <>
             <Timer />
-            <MoneyCount />
+            <MoneyCount items={items} />
         </>
     )
 }
