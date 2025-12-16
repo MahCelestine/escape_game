@@ -1,85 +1,49 @@
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+// components/Timer.jsx
+import React from 'react';
 
-const GAME_DURATION = 0.1 * 60 * 1000;
-
-function Timer({ onTimeUp }) {
-  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  const navigate = useNavigate();
-
-  const intervalRef = useRef(null);
-  const startTimeRef = useRef(null);
-
-  const formatTime = (ms) => {
+function Timer({ 
+  timeLeft = 0, 
+  isRunning = false, 
+  isFinished = false, 
+  formatTime,
+  onStart = () => {}
+}) {
+  // Fonction de formatage par défaut
+  const defaultFormatTime = (ms) => {
     if (ms <= 0) return "00:00";
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const calculateTimeLeft = (startTime, duration) => {
-    const now = Date.now();
-    const elapsed = now - startTime;
-    const remaining = duration - elapsed;
-    return Math.max(0, remaining);
-  };
-
-  const startTimer = () => {
-    if (isRunning) return;
-
-    startTimeRef.current = Date.now();
-    setIsRunning(true);
-
-    if (intervalRef.current) clearInterval(intervalRef.current);
-
-    intervalRef.current = setInterval(() => {
-      if (!startTimeRef.current) return;
-      
-      const remaining = calculateTimeLeft(startTimeRef.current, GAME_DURATION);
-      setTimeLeft(remaining);
-
-      if (remaining <= 0) {
-        handleGameOver();
-      }
-    }, 100);
-  };
-
-  const handleGameOver = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsRunning(false);
-    setIsFinished(true);
-    setTimeLeft(0);
-    startTimeRef.current = null;
-
-    if (onTimeUp) onTimeUp();
-  };
-
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isFinished) {
-      navigate("/Fin");
-    }
-  }, [isFinished, navigate]);
+  // Utiliser la prop formatTime si elle est fournie, sinon utiliser la fonction par défaut
+  const displayFormatTime = formatTime || defaultFormatTime;
 
   return (
-    <div style={{backgroundColor: "rgba(0,0,0,0.6)",padding:"1%", borderRadius:"5px"}}>
-      <h2>{formatTime(timeLeft)}</h2>
-      <div>
-        {!isRunning && !isFinished && (
-          <button onClick={startTimer}>Démarrer Mission</button>
-        )}
-      </div>
-    </div>
+    <>
+      <h2 style={{ margin: 0 }}>
+        {displayFormatTime(timeLeft)} {/* Utiliser displayFormatTime */}
+      </h2>
+      
+      {!isRunning && !isFinished && (
+        <button 
+          onClick={onStart}
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: 'bold'
+          }}
+        >
+          Démarrer Mission
+        </button>
+      )}
+    </>
   );
 }
 

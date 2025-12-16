@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import ItemInventaire from "./ItemInventaire";
 import "../assets/css/Inventaire.css";
-const Inventaire = ({ items = [] }) => {
+import Option from "./Option";
+
+const Inventaire = ({ items = [],
+  timeLeft = 0,
+  isRunning = false,
+  isFinished = false,
+  onPause = () => {},
+  onResume = () => {},
+  onReset = () => {},
+  onStart = () => {},
+  formatTime = (ms) => "00:00"
+ }) => {
+  const [showOptions, setShowOptions] = useState(false);
+
   return (
     <div className="inventory-container">
       {/* Bouton Paramètres (Décoratif pour l'instant) */}
-      <button className="settings-btn" title="Options">
+      <button 
+        className="settings-btn" 
+        title="Options du timer"
+        onClick={() => setShowOptions(true)}
+      >
         ⚙️
       </button>
 
@@ -33,6 +50,20 @@ const Inventaire = ({ items = [] }) => {
           Vide
         </div>
       )}
+
+      {/* Modal Option */}
+      <Option
+        isOpen={showOptions}
+        onClose={() => setShowOptions(false)}
+        timeLeft={timeLeft}
+        isRunning={isRunning}
+        isFinished={isFinished}
+        onPause={onPause}
+        onResume={onResume}
+        onReset={onReset}
+        onStart={onStart}
+        formatTime={formatTime}
+      />
     </div>
   );
 };
