@@ -2,12 +2,13 @@ import React, { useState } from "react"; // J'ai retiré useEffect car on ne s'e
 import VueSalle from "../components/VueSalle";
 import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
-import HUD from "../components/HUD"
-
+import HUD from "../components/HUD";
+import PuzzleModal from "../components/PuzzleModal";
 function JeuPrincipal() {
   // --- 1. LES ÉTATS (STATE) ---
   const [currentRoomId, setCurrentRoomId] = useState(GAME_CONFIG.startingRoom);
   const [inventory, setInventory] = useState([]);
+  const [activePuzzle, setActivePuzzle] = useState(null);
 
   // J'ai enlevé les états du timer (timeLeft, timerActive) pour nettoyer
 
@@ -32,15 +33,7 @@ function JeuPrincipal() {
         break;
 
       case "puzzle":
-        const code = prompt(item.lockedMessage);
-        if (code === item.codeRequired) {
-          const keyItem = ITEMS_DB[item.itemId];
-          // On ajoute la clé à l'inventaire
-          setInventory([...inventory, keyItem]);
-          alert("Succès ! Casier ouvert et clé récupérée.");
-        } else {
-          alert("Code faux !");
-        }
+        setActivePuzzle(item);
         break;
 
       case "info":
@@ -66,6 +59,24 @@ function JeuPrincipal() {
 
   // --- 3. LE RENDU ---
   const currentRoom = ROOMS_DATA[currentRoomId];
+
+  // Puzzle
+
+  const handlePuzzleSuccess = () => {
+    if (!activePuzzle) return;
+
+    // 1. Récupérer la récompense liée à ce puzzle
+    const rewardItem = ITEMS_DB[activePuzzle.itemId];
+
+    // 2. Ajouter à l'inventaire
+    setInventory((prev) => [...prev, rewardItem]);
+
+    // 3. Feedback
+    alert(`Système piraté ! Vous avez obtenu : ${rewardItem.name}`);
+
+    // 4. Fermer la modale
+    setActivePuzzle(null);
+  };
 
   return (
     <div
@@ -100,7 +111,6 @@ function JeuPrincipal() {
         </div> */}
       </div>
 
-
       <Inventaire items={inventory} />
 
       {/* LA VUE DE LA SALLE */}
@@ -109,6 +119,12 @@ function JeuPrincipal() {
         onInteract={handleInteraction}
         // On passe la liste des IDs pour que VueSalle sache quoi cacher
         collectedItems={inventory.map((item) => item.id)}
+      />
+
+      <PuzzleModal
+        puzzle={activePuzzle}
+        onClose={() => setActivePuzzle(null)}
+        onSuccess={handlePuzzleSuccess}
       />
     </div>
   );
