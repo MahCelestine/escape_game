@@ -1,14 +1,40 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/Homepage.css";
 import galleryImage from "../assets/img/Musée De Nuit.jpg";
+import introVideo from "../assets/video/Vidéo intro.mp4";
 
 function Homepage() {
   const navigate = useNavigate();
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   const handleStart = () => {
+    setIsVideoPlaying(true);
+  };
+
+  const handleVideoEnd = () => {
     navigate("/escape");
   };
+
+  if (isVideoPlaying) {
+    return (
+      <div className="video-fullscreen-container">
+        <video
+          src={introVideo}
+          autoPlay
+          // controls // Décommente si tu veux que le joueur puisse mettre pause
+          className="fullscreen-video"
+          onEnded={handleVideoEnd} // C'est ici que la magie opère
+        />
+
+        {/* Bouton "Passer" optionnel (au cas où la vidéo est trop longue) */}
+        <button onClick={handleVideoEnd} className="skip-button">
+          Passer l'intro
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="home-container">

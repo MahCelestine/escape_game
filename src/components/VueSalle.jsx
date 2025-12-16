@@ -88,8 +88,7 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
       {room.interactables.map((item) => {
         const isCollected = collectedItems.includes(item.itemId || item.id);
         // On n'affiche pas les objets déjà ramassés
-        if ((item.type === "loot" || item.type === "key") && isCollected)
-          return null;
+        if (isCollected) return null;
 
         return (
           <div

@@ -6,6 +6,11 @@ import basementBg from "../assets/img/Sous-sol.jpg";
 
 import BadgeIcon from "../assets/img/icons/Badge.png";
 
+// Énigme
+import FindNumberIMG from "../assets/img/enigma/aquarelle-paper-texture.jpg";
+import Sudoku from "../assets/img/enigma/postit.png";
+import CodeBaton from "../assets/img/enigma/code5.jpg";
+
 export const GAME_CONFIG = {
   startingRoom: "gallery",
   maxInventorySlots: 7,
@@ -20,7 +25,7 @@ export const ITEMS_DB = {
     image: "/assets/icons/diamond.png",
     description: "Un Diamant ??? Ah oui ! Ça valait le coup !",
   },
-  necklace: {
+  jewels: {
     id: "jewels",
     name: "Bijoux",
     type: "loot",
@@ -96,14 +101,21 @@ export const ROOMS_DATA = {
     ],
     interactables: [
       {
-        id: "loot_necklace",
-        itemId: "necklace",
+        id: "loot_jewels",
+        itemId: "jewels",
         type: "puzzle",
-        puzzleType: "DIGICODE",
-        solution: "",
-        description: `PROTECTION VITRINE... (le texte)...`,
-        clue: "Indice : Toutes les énigmes ne se résolvent pas par un code (Laissez vide et validez).",
-        style: { top: "45%", left: "25%", width: "8%", height: "8%" },
+        puzzleType: "SLIDING",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+        description:
+          "Reconstituez le chef-d'œuvre pour désactiver l'alarme du cadre.",
+        style: {
+          top: "50%",
+          left: "45%",
+          width: "10%",
+          height: "25%",
+          border: "2px solid red",
+        },
       },
     ],
   },
@@ -131,17 +143,35 @@ export const ROOMS_DATA = {
       {
         id: "loot_diamond",
         itemId: "diamond",
-        type: "loot",
-        collected: false,
-        dialogue: "BINGO ! Le fameux diamant noir !",
-        style: { top: "35%", left: "45%", width: "10%", height: "10%" },
+        type: "puzzle",
+        puzzleType: "DIGICODE",
+        solution: "876",
+        image: FindNumberIMG,
+        description:
+          "Ce caisson blindé protège le Diamant. Il faut un code de sécurité.",
+
+        style: {
+          top: "32.5%",
+          left: "45%",
+          width: "10%",
+          height: "15%",
+          border: "2px solid red",
+        },
       },
       {
-        id: "flavor_pc",
-        type: "info",
-        dialogue:
-          "L'ordinateur est verrouillé. Il y a une photo de chat en fond d'écran.",
-        style: { top: "55%", left: "30%", width: "15%", height: "10%" },
+        id: "loot_coin",
+        itemId: "coin",
+        type: "puzzle",
+        puzzleType: "DIGICODE",
+        solution: "2334",
+        image: Sudoku,
+        style: {
+          top: "55%",
+          left: "7.5%",
+          width: "45%",
+          height: "45%",
+          border: "2px solid blue",
+        },
       },
     ],
   },
@@ -175,26 +205,34 @@ export const ROOMS_DATA = {
       {
         id: "loot_fetish",
         itemId: "fetish",
-        type: "loot",
-        collected: false,
+        type: "puzzle",
+        puzzleType: "PATIENCE",
+        description: "Ne bougez surtout pas...",
         dialogue: "Une idole en or...",
-        style: { top: "60%", left: "20%", width: "8%", height: "10%" },
+        style: {
+          top: "40%",
+          left: "52%",
+          width: "5%",
+          height: "15%",
+          border: "2px solid green",
+        },
       },
-      {
-        id: "loot_coin",
-        itemId: "coin",
-        type: "loot",
-        collected: false,
-        dialogue: "Une pièce romaine !",
-        style: { top: "30%", left: "10%", width: "5%", height: "5%" },
-      },
+
       {
         id: "loot_painting",
         itemId: "painting",
-        type: "loot",
-        collected: false,
-        dialogue: "Attention à ne pas déchirer la toile...",
-        style: { top: "30%", left: "60%", width: "12%", height: "15%" },
+        type: "puzzle",
+        puzzleType: "CODE_INPUT",
+        solution: "SECRET",
+        image: CodeBaton,
+        description: "Déchiffrez le message caché.",
+        style: {
+          top: "65%",
+          left: "55%",
+          width: "7.5%",
+          height: "35%",
+          border: "2px solid orange",
+        },
       },
     ],
   },
@@ -220,29 +258,34 @@ export const ROOMS_DATA = {
     ],
     interactables: [
       {
-        id: "screens",
-        type: "info",
-        dialogue: "Je me vois sur les caméras... Il faut que je fasse vite !",
-        style: { top: "30%", left: "20%", width: "60%", height: "20%" },
-      },
-      {
         id: "locker_puzzle",
-        itemId: "badge", // C'est bien le badge qu'on gagne
+        itemId: "badge",
         type: "puzzle",
+        puzzleType: "DIGICODE",
+        solution: "",
 
-        // --- MISE À JOUR POUR LE SYSTEME DE PUZZLE MODERNE ---
-        puzzleType: "DIGICODE", // Important pour ouvrir le bon composant
-        solution: "1923", // La réponse attendue
+        description: `PROTECTION VITRINE
+        Le code est composé de 4 chiffres.
+        - Aucun chiffre n’est répété
+        - Le 1er chiffre est pair
+        - Le 2e est le triple du 4e
+        - Le 3e est la somme du 1er et du 4e
+        - La somme totale des chiffres vaut 18
+        Quel est le code ?`,
 
-        description:
-          "Ce casier est protégé par un code numérique. Une date peut-être ?",
+        clue: "Indice : Toutes les énigmes ne se résolvent pas par un code (Laissez vide et validez).",
         lockedMessage: "C'est verrouillé électroniquement.",
 
-        // Texte mis à jour : On parle d'un badge maintenant
         successMessage:
           "Bip ! Le casier s'ouvre. Il y a un badge d'accès à l'intérieur.",
 
-        style: { top: "50%", left: "50%", width: "10%", height: "30%" },
+        style: {
+          top: "30%",
+          left: "10%",
+          width: "15%",
+          height: "60%",
+          border: "2px solid teal",
+        },
       },
     ],
   },
@@ -264,23 +307,26 @@ export const ROOMS_DATA = {
       {
         id: "exit_gate",
         type: "exit",
-        requiredItem: "badge", // L'ID de l'item requis
-
-        // Textes mis à jour pour coller au contexte "Badge"
+        requiredItem: "badge",
         lockedMessage:
           "La porte blindée est verrouillée. Il y a un lecteur de badge rouge.",
         successMessage:
           "BIP VALIDÉ ! Le voyant passe au vert et la porte s'ouvre. La liberté !",
-
         style: { top: "60%", left: "35%", width: "30%", height: "20%" },
       },
       {
         id: "loot_fossil",
         itemId: "fossil",
-        type: "loot",
-        collected: false,
-        dialogue: "Un doigt ? Sérieusement ?",
-        style: { top: "75%", left: "50%", width: "5%", height: "5%" },
+        type: "puzzle",
+        puzzleType: "HIDDEN_WORD",
+        description: "Tu ne trouveras [rien] ici.",
+        style: {
+          top: "65%",
+          left: "17.5%",
+          width: "15%",
+          height: "25%",
+          border: "2px solid purple",
+        },
       },
     ],
   },
