@@ -1,16 +1,126 @@
-import React, { useState } from "react"; // J'ai retiré useEffect car on ne s'en sert plus
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import VueSalle from "../components/VueSalle";
 import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
 import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
+
+const GAME_DURATION = 0.1 * 60 * 1000
+
 function JeuPrincipal() {
   // --- 1. LES ÉTATS (STATE) ---
   const [currentRoomId, setCurrentRoomId] = useState(GAME_CONFIG.startingRoom);
   const [inventory, setInventory] = useState([]);
   const [activePuzzle, setActivePuzzle] = useState(null);
 
-  // J'ai enlevé les états du timer (timeLeft, timerActive) pour nettoyer
+  // const pour le timer
+
+  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isTimerFinished, setIsTimerFinished] = useState(false);
+  const navigate = useNavigate();
+  const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  const formatTime = (ms) => {
+    if (ms <= 0) return "00:00";
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const calculateTimeLeft = (startTime, duration) => {
+    const now = Date.now();
+    const elapsed = now - startTime;
+    const remaining = duration - elapsed;
+    return Math.max(0, remaining);
+  };
+
+  const startTimer = () => {
+    if (isTimerRunning || isTimerFinished) return;
+
+    startTimeRef.current = Date.now();
+    setIsTimerRunning(true);
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      if (!startTimeRef.current) return;
+
+      const remaining = calculateTimeLeft(startTimeRef.current, GAME_DURATION);
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        handleTimeUp();
+      }
+    }, 100);
+  };
+
+  const pauseTimer = () => {
+    if (!isTimerRunning || isTimerFinished) return;
+
+    clearInterval(intervalRef.current);
+    setIsTimerRunning(false);
+
+    if (startTimeRef.current) {
+      const remaining = calculateTimeLeft(startTimeRef.current, GAME_DURATION);
+      setTimeLeft(remaining);
+    }
+  };
+
+  const resumeTimer = () => {
+    if (isTimerRunning || isTimerFinished) return;
+
+    if (!startTimeRef.current) {
+      startTimer();
+      return;
+    }
+
+    const now = Date.now();
+    const elapsed = GAME_DURATION - timeLeft;
+    startTimeRef.current = now - elapsed;
+
+    setIsTimerRunning(true);
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      const remaining = calculateTimeLeft(startTimeRef.current, GAME_DURATION);
+      setTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        handleTimeUp();
+      }
+    }, 100);
+  };
+
+  const resetTimer = () => {
+    clearInterval(intervalRef.current);
+    setIsTimerRunning(false);
+    setIsTimerFinished(false);
+    setTimeLeft(GAME_DURATION);
+    startTimeRef.current = null;
+  };
+
+  const handleTimeUp = () => {
+    clearInterval(intervalRef.current);
+    setIsTimerRunning(false);
+    setIsTimerFinished(true);
+    setTimeLeft(0);
+    startTimeRef.current = null;
+
+    // Naviguer vers l'écran de fin
+    navigate("/Fin");
+  };
+
+  // --- Nettoyage du timer ---
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   // --- 2. LA FONCTION D'INTERACTION ---
   const handleInteraction = (item) => {
@@ -99,10 +209,17 @@ function JeuPrincipal() {
           color: "white",
           padding: "1%",
           borderRadius: "8px",
-          width:"98%",
+          width: "98%",
         }}
       >
-        <HUD items={inventory} />
+        <HUD
+          timeLeft={timeLeft}
+          isRunning={isTimerRunning}
+          isFinished={isTimerFinished}
+          items={inventory}
+          onStart={startTimer}
+          formatTime={formatTime}
+        />
         {/* <div>
           Sac : {inventory.length} / {GAME_CONFIG.maxInventorySlots} objets
         </div>
@@ -111,7 +228,15 @@ function JeuPrincipal() {
         </div> */}
       </div>
 
-      <Inventaire items={inventory} />
+      <Inventaire items={inventory}
+        timeLeft={timeLeft}
+        isRunning={isTimerRunning}
+        isFinished={isTimerFinished}
+        onPause={pauseTimer}
+        onResume={resumeTimer}
+        onReset={resetTimer}
+        onStart={startTimer}
+        formatTime={formatTime} />
 
       {/* LA VUE DE LA SALLE */}
       <VueSalle
