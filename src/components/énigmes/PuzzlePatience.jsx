@@ -1,51 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react"; // 1. AJOUT DE useRef
 
 const PuzzlePatience = ({ data, onSuccess }) => {
   const START_TIME = 10;
   const [timeLeft, setTimeLeft] = useState(START_TIME);
   const [message, setMessage] = useState("Ne bougez plus...");
-  const [shake, setShake] = useState(false); // Pour l'effet visuel quand on rate
+  const [shake, setShake] = useState(false);
+
+  // 2. LE VERROU DE SÉCURITÉ
+  // Il va servir à être sûr qu'on ne gagne qu'une seule fois
+  const isFinished = useRef(false);
 
   useEffect(() => {
-    // Fonction qui réinitialise le timer si on bouge
     const handleMovement = () => {
+      // Si c'est déjà fini, on ne fait plus rien (on ne reset pas le timer)
+      if (isFinished.current) return;
+
       setTimeLeft(START_TIME);
       setMessage("Vous avez bougé ! On reprend à zéro.");
       setShake(true);
-      setTimeout(() => setShake(false), 500); // Reset de l'anim
+      setTimeout(() => setShake(false), 500);
     };
 
-    // On écoute les mouvements de souris ET les clics partout sur la fenêtre
     window.addEventListener("mousemove", handleMovement);
     window.addEventListener("click", handleMovement);
-    window.addEventListener("keydown", handleMovement); // Si tu veux aussi bloquer le clavier
+    window.addEventListener("keydown", handleMovement);
 
-    // Le Timer qui décrémente chaque seconde
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
+        // Si le verrou est mis, on force le timer à rester à 0
+        if (isFinished.current) return 0;
+
         if (prev <= 1) {
-          // Victoire !
+          // --- VICTOIRE ---
+
+          // 3. ON VERROUILLE IMMÉDIATEMENT
+          isFinished.current = true;
+
           clearInterval(timer);
-          // On retire les écouteurs pour ne pas bloquer la victoire
+
+          // Nettoyage des écouteurs
           window.removeEventListener("mousemove", handleMovement);
           window.removeEventListener("click", handleMovement);
           window.removeEventListener("keydown", handleMovement);
 
+          // On appelle le succès UNE SEULE FOIS
           onSuccess();
+
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    // Nettoyage quand le composant est démonté (fermé)
     return () => {
       clearInterval(timer);
       window.removeEventListener("mousemove", handleMovement);
       window.removeEventListener("click", handleMovement);
       window.removeEventListener("keydown", handleMovement);
     };
-  }, [onSuccess]); // Dépendance vide ou onSuccess pour ne lancer qu'une fois
+  }, [onSuccess]);
 
   return (
     <div
@@ -83,7 +96,7 @@ const PuzzlePatience = ({ data, onSuccess }) => {
         {message}
       </p>
 
-      {/* Barre de progression visuelle */}
+      {/* Barre de progression */}
       <div
         style={{
           width: "100%",

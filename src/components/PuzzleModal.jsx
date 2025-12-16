@@ -4,6 +4,8 @@ import PuzzleQuiz from "./énigmes/PuzzleQuiz.jsx";
 import PuzzleSliding from "./énigmes/PuzzleSliding.jsx";
 import PuzzleCodeInput from "./énigmes/PuzzleCodeInput.jsx";
 import PuzzlePatience from "./énigmes/PuzzlePatience.jsx";
+import PuzzleHiddenWord from "./énigmes/PuzzleHiddenWord.jsx";
+import PuzzleSwitches from "./énigmes/PuzzleSwitches.jsx";
 
 const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
   if (!puzzle) return null;

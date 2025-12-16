@@ -1,57 +1,51 @@
 import React, { useState, useEffect } from "react";
 
 const PuzzleSliding = ({ data, onSuccess }) => {
-  const SIZE = 3; // Grille de 3x3 (C'est plus jouable sur mobile que 4x4)
+  const SIZE = 3;
   const TILE_COUNT = SIZE * SIZE;
+  const GRID_SIZE = 300; // Taille totale du puzzle en pixels
+  const TILE_SIZE = GRID_SIZE / SIZE; // Taille d'une case (ex: 100px)
 
-  // tiles = tableau des positions actuelles.
-  // Si tiles[0] vaut 0, la pièce n°0 est à la position 0 (correct).
-  // La valeur (TILE_COUNT - 1) représente la case vide.
   const [tiles, setTiles] = useState([]);
   const [isSolved, setIsSolved] = useState(false);
 
-  // Initialisation et Mélange
   useEffect(() => {
-    // 1. On crée l'état résolu : [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    // 1. État résolu
     let initialTiles = Array.from({ length: TILE_COUNT }, (_, i) => i);
 
-    // 2. On mélange (Shuffle)
-    // Pour être sûr que le puzzle soit SOLUBLE, on ne mélange pas au hasard.
-    // On part de l'état résolu et on fait des mouvements aléatoires valides.
+    // 2. Mélange (Shuffle valide)
     let currentTiles = [...initialTiles];
-    let emptyIdx = TILE_COUNT - 1; // La dernière case est vide au début
+    let emptyIdx = TILE_COUNT - 1;
     let previousIdx = null;
 
     for (let i = 0; i < 100; i++) {
-      // 100 mouvements aléatoires
       const neighbors = getNeighbors(emptyIdx);
-      // On évite de revenir en arrière immédiatement pour bien mélanger
       const candidates = neighbors.filter((n) => n !== previousIdx);
       const randomNeighbor =
         candidates[Math.floor(Math.random() * candidates.length)];
 
-      // On échange
-      [currentTiles[emptyIdx], currentTiles[randomNeighbor]] = [
-        currentTiles[randomNeighbor],
-        currentTiles[emptyIdx],
-      ];
-      previousIdx = emptyIdx;
-      emptyIdx = randomNeighbor;
+      if (randomNeighbor !== undefined) {
+        [currentTiles[emptyIdx], currentTiles[randomNeighbor]] = [
+          currentTiles[randomNeighbor],
+          currentTiles[emptyIdx],
+        ];
+        previousIdx = emptyIdx;
+        emptyIdx = randomNeighbor;
+      }
     }
 
     setTiles(currentTiles);
   }, []);
 
-  // Obtenir les indices voisins valides (Haut, Bas, Gauche, Droite)
   const getNeighbors = (index) => {
     const neighbors = [];
     const row = Math.floor(index / SIZE);
     const col = index % SIZE;
 
-    if (row > 0) neighbors.push(index - SIZE); // Haut
-    if (row < SIZE - 1) neighbors.push(index + SIZE); // Bas
-    if (col > 0) neighbors.push(index - 1); // Gauche
-    if (col < SIZE - 1) neighbors.push(index + 1); // Droite
+    if (row > 0) neighbors.push(index - SIZE);
+    if (row < SIZE - 1) neighbors.push(index + SIZE);
+    if (col > 0) neighbors.push(index - 1);
+    if (col < SIZE - 1) neighbors.push(index + 1);
 
     return neighbors;
   };
@@ -59,34 +53,34 @@ const PuzzleSliding = ({ data, onSuccess }) => {
   const handleTileClick = (index) => {
     if (isSolved) return;
 
-    // Trouver où est la case vide
     const emptyIndex = tiles.indexOf(TILE_COUNT - 1);
-
-    // Vérifier si on a cliqué sur un voisin de la case vide
     const neighbors = getNeighbors(emptyIndex);
+
     if (neighbors.includes(index)) {
-      // SWAP : On échange les positions dans le tableau
       const newTiles = [...tiles];
       [newTiles[index], newTiles[emptyIndex]] = [
         newTiles[emptyIndex],
         newTiles[index],
       ];
       setTiles(newTiles);
-
-      // Vérifier la victoire
       checkWin(newTiles);
     }
   };
 
   const checkWin = (currentTiles) => {
-    // Est-ce que chaque tuile est à sa place (0 à 0, 1 à 1, etc.) ?
     const isWin = currentTiles.every((val, index) => val === index);
     if (isWin) {
       setIsSolved(true);
-      setTimeout(() => {
-        onSuccess();
-      }, 500); // Petite pause pour voir l'image complète
+      setTimeout(() => onSuccess(), 500);
     }
+  };
+
+  // --- FONCTION DE TRICHE (DEBUG) ---
+  const handleAutoSolve = () => {
+    // On remet les tuiles dans l'ordre parfait : [0, 1, 2, ... 8]
+    const solvedState = Array.from({ length: TILE_COUNT }, (_, i) => i);
+    setTiles(solvedState);
+    checkWin(solvedState); // On lance la vérification de victoire
   };
 
   return (
@@ -102,23 +96,23 @@ const PuzzleSliding = ({ data, onSuccess }) => {
         {data.description || "Reconstituez l'image."}
       </p>
 
+      {/* CONTENEUR DU PUZZLE */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${SIZE}, 1fr)`,
           gap: "2px",
-          width: "300px", // Taille fixe du puzzle
-          height: "300px",
+          width: `${GRID_SIZE}px`, // 300px
+          height: `${GRID_SIZE}px`,
           backgroundColor: "#334155",
-          border: "4px solid #fbbf24",
+          border: isSolved ? "4px solid #4ade80" : "4px solid #fbbf24", // Vert si gagné
           padding: "2px",
           borderRadius: "8px",
+          position: "relative",
         }}
       >
         {tiles.map((tileValue, index) => {
-          // Coordonnées de la "bonne" position de ce morceau d'image
-          // tileValue 0 => x=0, y=0
-          // tileValue 1 => x=1, y=0 ...
+          // Calcul de la position correcte de ce morceau d'image
           const correctRow = Math.floor(tileValue / SIZE);
           const correctCol = tileValue % SIZE;
 
@@ -131,32 +125,54 @@ const PuzzleSliding = ({ data, onSuccess }) => {
               style={{
                 width: "100%",
                 height: "100%",
-                cursor: isEmpty ? "default" : "pointer",
-                // L'ASTUCE IMAGE :
-                backgroundImage: isEmpty ? "none" : `url(${data.image})`,
-                backgroundSize: `${SIZE * 100}%`, // L'image doit couvrir toute la grille virtuelle
-                backgroundPosition: `${correctCol * (100 / (SIZE - 1))}% ${
-                  correctRow * (100 / (SIZE - 1))
-                }%`,
-
-                opacity: isEmpty ? 0 : 1, // La case vide est invisible
-                transition: "transform 0.2s",
+                cursor: isEmpty || isSolved ? "default" : "pointer",
                 borderRadius: "4px",
+
+                // --- CORRECTION DE L'IMAGE ---
+                opacity: isEmpty && !isSolved ? 0 : 1, // La case vide apparaît quand on gagne
+
+                backgroundImage: `url(${data.image})`,
+
+                // 1. On force l'image à faire EXACTEMENT 300px x 300px
+                // Cela écrase l'image si elle n'est pas carrée, mais assure que le puzzle est parfait.
+                backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+
+                // 2. On positionne l'image en négatif (on décale l'image vers le haut/gauche)
+                // Ex: pour la case (1,0) [milieu haut], on décale de -100px en X
+                backgroundPosition: `-${correctCol * TILE_SIZE}px -${
+                  correctRow * TILE_SIZE
+                }px`,
+
+                transition: "all 0.2s",
               }}
             />
           );
         })}
       </div>
 
-      {/* Aide visuelle : L'image modèle en tout petit */}
-      <div
-        style={{
-          marginTop: "10px",
-          textAlign: "center",
-          fontSize: "12px",
-          color: "#888",
-        }}
-      >
+      {/* --- BOUTON DE TRICHE --- */}
+      {!isSolved && (
+        <button
+          onClick={handleAutoSolve}
+          style={{
+            marginTop: "10px",
+            padding: "5px 10px",
+            backgroundColor: "#ef4444", // Rouge pour dire "Attention triche"
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "10px",
+            opacity: 0.7,
+          }}
+          title="Pour les développeurs pressés"
+        >
+          🛠️ RÉSOLUTION AUTO
+        </button>
+      )}
+
+      {/* Aide visuelle : Modèle */}
+      <div style={{ textAlign: "center", fontSize: "12px", color: "#888" }}>
         Modèle :
         <img
           src={data.image}
