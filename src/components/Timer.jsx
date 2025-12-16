@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-
 // Configuration
 const GAME_DURATION = 20 * 60 * 1000; // 20 minutes en ms
 
@@ -103,14 +102,14 @@ function Timer({ onTimeUp }) {
   }, []);
 
   return (
-    <div>
+    <div style={{backgroundColor: "rgba(0,0,0,0.6)",padding:"1%", borderRadius:"5px"}}>
 
       {/* Affichage direct du state, pas de ref */}
-      <h2 style={{ fontSize: '2.5rem', fontFamily: 'monospace', margin: '10px 0' }}>
+      <h2>
         {formatTime(timeLeft)}
       </h2>
 
-      <div style={{ marginTop: '10px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+      <div>
         {!isRunning && !isFinished && (
           <button onClick={startTimer}>
             Démarrer Mission
@@ -119,7 +118,7 @@ function Timer({ onTimeUp }) {
       </div>
 
       {isFinished && (
-        <p style={{ color: 'red', fontWeight: 'bold', animation: 'blink 1s infinite' }}>
+        <p>
           TEMPS ÉCOULÉ !
         </p>
       )}

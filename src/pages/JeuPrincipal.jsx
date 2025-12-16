@@ -86,12 +86,12 @@ function JeuPrincipal() {
           left: 10,
           zIndex: 100,
           color: "white",
-          backgroundColor: "rgba(0,0,0,0.6)",
-          padding: "10px",
+          padding: "1%",
           borderRadius: "8px",
+          width:"98%",
         }}
       >
-              <HUD items={inventory} />
+        <HUD items={inventory} />
         {/* <div>
           Sac : {inventory.length} / {GAME_CONFIG.maxInventorySlots} objets
         </div>
