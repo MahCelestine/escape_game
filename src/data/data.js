@@ -1,26 +1,21 @@
-import galleryBg from "../assets/img/gallery.png";
-import officeBg from "../assets/img/desk.png";
-import storageBg from "../assets/img/reserve.png";
-import lobbyBg from "../assets/img/entrance.png";
-import lockersBg from "../assets/img/vestiaires.png";
-import surveillanceBg from "../assets/img/surveillance.png";
-import basementBg from "../assets/img/cave.png";
+import galleryBg from "../assets/img/Galerie.jpg";
+import officeBg from "../assets/img/Bureau.jpg";
+import storageBg from "../assets/img/Stockage.jpg";
+import surveillanceBg from "../assets/img/Salle de surveillance casier fermé.jpg";
+import basementBg from "../assets/img/Sous-sol.jpg";
 
 export const GAME_CONFIG = {
-  startingRoom: "gallery", // Le joueur commence ici
+  startingRoom: "gallery",
   maxInventorySlots: 7,
 };
 
-// --- BASE DE DONNÉES DES ITEMS (BUTIN & OBJETS DE QUÊTE) ---
-// type: 'loot' (score) ou 'key' (utile pour avancer) ou 'clue' (indice)
 export const ITEMS_DB = {
-  // --- BUTIN (Score) ---
   diamond: {
     id: "diamond",
     name: "Diamant Noir",
     type: "loot",
     value: 25000,
-    image: "/assets/icons/diamond.png", // Chemin vers ton icône
+    image: "/assets/icons/diamond.png",
     description: "Un diamant d'une pureté exceptionnelle volé au directeur.",
   },
   necklace: {
@@ -63,8 +58,6 @@ export const ITEMS_DB = {
     image: "/assets/icons/coin.png",
     description: "Une petite pièce rare retrouvée sous une étagère.",
   },
-
-  // --- OBJETS DE QUÊTE ---
   sewer_key: {
     id: "sewer_key",
     name: "Clé Rouillée",
@@ -75,63 +68,41 @@ export const ITEMS_DB = {
   },
 };
 
-// --- LE MONDE (SALLES, NAVIGATION ET INTERACTIONS) ---
-/* NOTE SUR LES POSITIONS : 
-   Les valeurs top/left/width/height sont en % pour être responsive.
-   top: '50%' = au milieu verticalement.
-*/
-
 export const ROOMS_DATA = {
-  // 1. LA GALERIE (HUB CENTRAL)
+  // 1. LA GALERIE
   gallery: {
     id: "gallery",
     name: "Grande Galerie",
-    background: galleryBg, // Image générée
+    background: galleryBg,
     exits: [
       {
         target: "office",
         label: "Bureau",
-        style: { top: "40%", left: "5%", width: "10%", height: "50%" },
-      }, // Porte gauche
+        arrow: "left",
+        style: { top: "30%", left: "2%", width: "10%", height: "50%" }, // left: 2% pour coller au bord gauche
+      },
       {
         target: "storage",
         label: "Réserve",
-        style: { top: "40%", left: "85%", width: "10%", height: "50%" },
-      }, // Porte droite
-      {
-        target: "lobby",
-        label: "Vers l'Accueil",
-        style: { top: "85%", left: "40%", width: "20%", height: "10%" },
-      }, // Retour arrière
+        arrow: "right",
+        style: { top: "30%", left: "88%", width: "10%", height: "50%" }, // left: 88% pour coller au bord droit
+      },
     ],
     interactables: [
       {
-        id: "loot_necklace", // L'ID reste le même
-        itemId: "necklace", // La récompense quand on gagne, c'est le collier
-        type: "puzzle", // <--- CHANGEMENT : C'est maintenant un puzzle, pas un loot direct
+        id: "loot_necklace",
+        itemId: "necklace",
+        type: "puzzle",
         puzzleType: "DIGICODE",
-
-        // L'ASTUCE : Solution vide
         solution: "",
-
-        description: `PROTECTION VITRINE
-        Le code est composé de 4 chiffres.
-        - Aucun chiffre n’est répété
-        - Le 1er chiffre est pair
-        - Le 2e est le triple du 4e
-        - Le 3e est la somme du 1er et du 4e
-        - La somme totale des chiffres vaut 18
-        Quel est le code ?`,
-
+        description: `PROTECTION VITRINE... (le texte)...`,
         clue: "Indice : Toutes les énigmes ne se résolvent pas par un code (Laissez vide et validez).",
-
-        // On garde la position sur la vitrine
         style: { top: "45%", left: "25%", width: "8%", height: "8%" },
       },
     ],
   },
 
-  // 2. LE BUREAU (COFFRE FORT)
+  // 2. LE BUREAU
   office: {
     id: "office",
     name: "Bureau du Directeur",
@@ -140,12 +111,14 @@ export const ROOMS_DATA = {
       {
         target: "gallery",
         label: "Retour Galerie",
-        style: { top: "85%", left: "30%", width: "40%", height: "10%" },
+        arrow: "down",
+        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
       },
       {
         target: "surveillance",
         label: "Salle Sécu",
-        style: { top: "30%", left: "80%", width: "10%", height: "40%" },
+        arrow: "right",
+        style: { top: "30%", left: "85%", width: "10%", height: "40%" },
       },
     ],
     interactables: [
@@ -155,7 +128,7 @@ export const ROOMS_DATA = {
         type: "loot",
         collected: false,
         dialogue: "BINGO ! Le fameux diamant noir !",
-        style: { top: "35%", left: "45%", width: "10%", height: "10%" }, // Le coffre au fond
+        style: { top: "35%", left: "45%", width: "10%", height: "10%" },
       },
       {
         id: "flavor_pc",
@@ -167,7 +140,7 @@ export const ROOMS_DATA = {
     ],
   },
 
-  // 3. LA RÉSERVE (FOUILLIS)
+  // 3. LA RÉSERVE
   storage: {
     id: "storage",
     name: "Réserve",
@@ -176,13 +149,16 @@ export const ROOMS_DATA = {
       {
         target: "gallery",
         label: "Retour Galerie",
-        style: { top: "85%", left: "40%", width: "20%", height: "10%" },
+        arrow: "down",
+
+        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
       },
       {
         target: "basement",
         label: "Descendre au Sous-sol",
-        style: { top: "40%", left: "75%", width: "15%", height: "40%" },
-      }, // Porte sombre fond
+        arrow: "right",
+        style: { top: "40%", left: "80%", width: "15%", height: "40%" },
+      },
     ],
     interactables: [
       {
@@ -190,17 +166,16 @@ export const ROOMS_DATA = {
         itemId: "fetish",
         type: "loot",
         collected: false,
-        dialogue: "Une idole en or... j'espère qu'elle n'est pas maudite.",
-        style: { top: "60%", left: "20%", width: "8%", height: "10%" }, // Sur une caisse
+        dialogue: "Une idole en or...",
+        style: { top: "60%", left: "20%", width: "8%", height: "10%" },
       },
-
       {
         id: "loot_coin",
         itemId: "coin",
         type: "loot",
         collected: false,
-        dialogue: "Une pièce romaine ! C'est petit mais précieux.",
-        style: { top: "30%", left: "10%", width: "5%", height: "5%" }, // Sur une étagère haute
+        dialogue: "Une pièce romaine !",
+        style: { top: "30%", left: "10%", width: "5%", height: "5%" },
       },
       {
         id: "loot_painting",
@@ -208,12 +183,12 @@ export const ROOMS_DATA = {
         type: "loot",
         collected: false,
         dialogue: "Attention à ne pas déchirer la toile...",
-        style: { top: "30%", left: "60%", width: "12%", height: "15%" }, // Cadre au mur
+        style: { top: "30%", left: "60%", width: "12%", height: "15%" },
       },
     ],
   },
 
-  // 6. SALLE DE SURVEILLANCE (AMBIANCE)
+  // 4. SALLE DE SURVEILLANCE
   surveillance: {
     id: "surveillance",
     name: "Salle de Sécurité",
@@ -222,7 +197,8 @@ export const ROOMS_DATA = {
       {
         target: "office",
         label: "Retour Bureau",
-        style: { top: "85%", left: "40%", width: "20%", height: "10%" },
+        arrow: "down",
+        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
       },
     ],
     interactables: [
@@ -235,7 +211,7 @@ export const ROOMS_DATA = {
     ],
   },
 
-  // 7. SOUS-SOL (SORTIE)
+  // 5. SOUS-SOL
   basement: {
     id: "basement",
     name: "Tunnel de Maintenance",
@@ -244,26 +220,27 @@ export const ROOMS_DATA = {
       {
         target: "storage",
         label: "Remonter",
-        style: { top: "85%", left: "40%", width: "20%", height: "10%" },
+        arrow: "up", //
+        style: { top: "5%", left: "30%", width: "40%", height: "10%" }, // En haut de l'écran
       },
     ],
     interactables: [
       {
         id: "exit_gate",
-        type: "exit", // Condition de victoire
+        type: "exit",
         requiredItem: "sewer_key",
         lockedMessage:
           "La grille est fermée par un gros cadenas rouillé. Il me faut la clé.",
         successMessage: "La clé tourne ! La grille s'ouvre. La liberté !",
-        style: { top: "60%", left: "35%", width: "30%", height: "20%" }, // La grille au sol
+        style: { top: "60%", left: "35%", width: "30%", height: "20%" },
       },
       {
         id: "loot_fossil",
         itemId: "fossil",
         type: "loot",
         collected: false,
-        dialogue: "Un doigt ? Sérieusement ? Bon, ça se vendra.",
-        style: { top: "75%", left: "50%", width: "5%", height: "5%" }, // Par terre
+        dialogue: "Un doigt ? Sérieusement ?",
+        style: { top: "75%", left: "50%", width: "5%", height: "5%" },
       },
     ],
   },

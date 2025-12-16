@@ -1,0 +1,39 @@
+/* --- NAVIGATION (Flèches) --- */
+
+/* Le conteneur de la zone (invisible maintenant) */
+.exit-zone {
+  background-color: transparent; /* Plus de fond rectangulaire */
+  border: none; /* Plus de bordure */
+  /* On s'assure que l'icône est bien centrée si la zone est grande */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-arrow:hover {
+  border-radius: 10px;
+  cursor: pointer; 
+  background-color: black;
+  opacity: 0.80;
+}
+
+/* L'icône Flèche SVG elle-même */
+.nav-arrow {
+  width: 50px; /* Taille de la flèche, ajuste si besoin */
+  height: 50px;
+  /* Couleur par défaut : Blanc semi-transparent, discret */
+  color: rgba(255, 255, 255, 0.6); 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Une petite ombre pour qu'elle ressorte sur les fonds clairs */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+}
+
+/* Au survol de la zone */
+.exit-zone:hover .nav-arrow {
+  /* Devient jaune/or vif (couleur thème) */
+  color: #fbbf24; 
+  /* Grossit légèrement */
+  transform: scale(1.2);
+  /* Ajoute un effet de "Glow" lumineux */
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.8));
+}
