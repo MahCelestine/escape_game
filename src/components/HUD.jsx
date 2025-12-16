@@ -11,6 +11,20 @@ function HUD({
     formatTime,
     onStart = () => {}
 }) {
+    // Ajouter une vérification
+    if (typeof formatTime !== 'function') {
+        console.error('formatTime is not a function in HUD component');
+        // Fonction de secours
+        const fallbackFormatTime = (ms) => {
+            if (ms <= 0) return "00:00";
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        };
+        formatTime = fallbackFormatTime;
+    }
+
     return (
         <div style={{
             display: 'flex',

@@ -13,7 +13,7 @@ function Option({
   onStart,
   formatTime
 }) {
-  const GAME_DURATION = 0.1 * 60 * 1000;
+  const GAME_DURATION = 0.2 * 60 * 1000;
 
   const navigate = useNavigate();
 
@@ -49,6 +49,7 @@ function Option({
         left: 0,
         right: 0,
         bottom: 0,
+        marginLeft: '200px',
         backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex',
         justifyContent: 'center',
@@ -65,7 +66,7 @@ function Option({
           minWidth: '350px',
           color: 'white',
           border: '1px solid rgba(148, 163, 184, 0.3)',
-          background:' rgba(18, 25, 40, 0.75)',
+          background:' rgba(18, 25, 40, 0.85)',
         }}
       >
         <div style={{
@@ -123,7 +124,7 @@ function Option({
              isGameStarted ? 'Mission en pause' : 'Prêt à démarrer'}
           </div>
         </div>
-        
+        <div className="divider_option" style={{marginBottom: '25px',}}></div>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
