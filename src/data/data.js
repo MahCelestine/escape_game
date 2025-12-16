@@ -4,6 +4,8 @@ import storageBg from "../assets/img/Stockage.jpg";
 import surveillanceBg from "../assets/img/Salle de surveillance casier fermé.jpg";
 import basementBg from "../assets/img/Sous-sol.jpg";
 
+import BadgeIcon from "../assets/img/icons/Badge.png";
+
 export const GAME_CONFIG = {
   startingRoom: "gallery",
   maxInventorySlots: 7,
@@ -12,59 +14,63 @@ export const GAME_CONFIG = {
 export const ITEMS_DB = {
   diamond: {
     id: "diamond",
-    name: "Diamant Noir",
+    name: "Diamant",
     type: "loot",
-    value: 25000,
+    value: 45000,
     image: "/assets/icons/diamond.png",
-    description: "Un diamant d'une pureté exceptionnelle volé au directeur.",
+    description: "Un Diamant ??? Ah oui ! Ça valait le coup !",
   },
   necklace: {
-    id: "necklace",
-    name: "Collier de la Reine",
+    id: "jewels",
+    name: "Bijoux",
     type: "loot",
-    value: 26000,
+    value: 40000,
     image: "/assets/icons/necklace.png",
-    description: "Des rubis sertis d'or. Très lourd.",
+    description: "La petite led passe au vert, plus qu’à prendre les bijoux!",
   },
   painting: {
     id: "painting",
-    name: "La Toile Perdue",
+    name: "Toile",
     type: "loot",
-    value: 20000,
+    value: 18000,
     image: "/assets/icons/painting.png",
-    description: "Une œuvre inestimable du 17ème siècle.",
+    description: "Bon, j’espère que cette toile en vaut le coup.",
   },
   fetish: {
     id: "fetish",
-    name: "Fétiche Doré",
+    name: "Fétiche",
     type: "loot",
-    value: 13000,
+    value: 3500,
     image: "/assets/icons/fetish.png",
-    description: "Une statuette rituelle en or massif.",
+    description:
+      "euh… super sa c’est ouvert mais j’ai juste rien fait là- ooooh j’ai compris ! fallait juste pas bouger.",
   },
   fossil: {
     id: "fossil",
     name: "Doigt Fossilisé",
     type: "loot",
-    value: 10500,
+    value: 9300,
     image: "/assets/icons/fossil.png",
-    description: "C'est dégoûtant, mais ça vaut une fortune au marché noir.",
+    description:
+      "Fallait juste pousser un peu le placo, mais ce truc vaut vraiment du fric ? J’ai un doute…",
   },
   coin: {
     id: "coin",
-    name: "Drachme Antique",
+    name: "Pièce de monnaie ancienne",
     type: "loot",
-    value: 5500,
+    value: 4200,
     image: "/assets/icons/coin.png",
-    description: "Une petite pièce rare retrouvée sous une étagère.",
+    description:
+      "Je connais pas vraiment sa valeur, mais c’est une bonne prise !",
   },
-  sewer_key: {
-    id: "sewer_key",
-    name: "Clé Rouillée",
+  badge: {
+    id: "badge",
+    name: "Badge de Sécurité",
     type: "key",
     value: 0,
-    image: "/assets/icons/key.png",
-    description: "Une vieille clé marquée 'MAINTENANCE / SOUS-SOL'.",
+    image: BadgeIcon,
+    description:
+      "Un petit badge avec la tête d’un monsieur au visage disgracieux est à l'intérieur. C’est un badge de sécurité ! Très certainement que ça sera utile pour sortir d’ici.",
   },
 };
 
@@ -79,13 +85,13 @@ export const ROOMS_DATA = {
         target: "office",
         label: "Bureau",
         arrow: "left",
-        style: { top: "30%", left: "2%", width: "10%", height: "50%" }, // left: 2% pour coller au bord gauche
+        style: { top: "40%", left: "2%", width: "10%", height: "20%" }, // left: 2% pour coller au bord gauche
       },
       {
         target: "storage",
         label: "Réserve",
         arrow: "right",
-        style: { top: "30%", left: "88%", width: "10%", height: "50%" }, // left: 88% pour coller au bord droit
+        style: { top: "40%", left: "88%", width: "10%", height: "20%" }, // left: 88% pour coller au bord droit
       },
     ],
     interactables: [
@@ -111,14 +117,14 @@ export const ROOMS_DATA = {
       {
         target: "gallery",
         label: "Retour Galerie",
-        arrow: "down",
-        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
+        arrow: "right",
+        style: { top: "40%", left: "88%", width: "10%", height: "20%" },
       },
       {
         target: "surveillance",
         label: "Salle Sécu",
-        arrow: "right",
-        style: { top: "30%", left: "85%", width: "10%", height: "40%" },
+        arrow: "left",
+        style: { top: "40%", left: "2%", width: "10%", height: "20%" },
       },
     ],
     interactables: [
@@ -149,15 +155,20 @@ export const ROOMS_DATA = {
       {
         target: "gallery",
         label: "Retour Galerie",
-        arrow: "down",
-
-        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
+        arrow: "left",
+        style: { top: "40%", left: "2%", width: "10%", height: "20%" },
       },
       {
         target: "basement",
         label: "Descendre au Sous-sol",
+        arrow: "down",
+        style: { top: "88%", left: "40%", width: "20%", height: "10%" },
+      },
+      {
+        target: "surveillance",
+        label: "Salle Sécu",
         arrow: "right",
-        style: { top: "40%", left: "80%", width: "15%", height: "40%" },
+        style: { top: "40%", left: "88%", width: "10%", height: "20%" },
       },
     ],
     interactables: [
@@ -197,8 +208,14 @@ export const ROOMS_DATA = {
       {
         target: "office",
         label: "Retour Bureau",
-        arrow: "down",
-        style: { top: "80%", left: "30%", width: "40%", height: "10%" },
+        arrow: "right",
+        style: { top: "40%", left: "88%", width: "10%", height: "20%" },
+      },
+      {
+        target: "storage",
+        label: "Réserve",
+        arrow: "left",
+        style: { top: "40%", left: "2%", width: "10%", height: "20%" },
       },
     ],
     interactables: [
@@ -207,6 +224,25 @@ export const ROOMS_DATA = {
         type: "info",
         dialogue: "Je me vois sur les caméras... Il faut que je fasse vite !",
         style: { top: "30%", left: "20%", width: "60%", height: "20%" },
+      },
+      {
+        id: "locker_puzzle",
+        itemId: "badge", // C'est bien le badge qu'on gagne
+        type: "puzzle",
+
+        // --- MISE À JOUR POUR LE SYSTEME DE PUZZLE MODERNE ---
+        puzzleType: "DIGICODE", // Important pour ouvrir le bon composant
+        solution: "1923", // La réponse attendue
+
+        description:
+          "Ce casier est protégé par un code numérique. Une date peut-être ?",
+        lockedMessage: "C'est verrouillé électroniquement.",
+
+        // Texte mis à jour : On parle d'un badge maintenant
+        successMessage:
+          "Bip ! Le casier s'ouvre. Il y a un badge d'accès à l'intérieur.",
+
+        style: { top: "50%", left: "50%", width: "10%", height: "30%" },
       },
     ],
   },
@@ -220,18 +256,22 @@ export const ROOMS_DATA = {
       {
         target: "storage",
         label: "Remonter",
-        arrow: "up", //
-        style: { top: "5%", left: "30%", width: "40%", height: "10%" }, // En haut de l'écran
+        arrow: "up",
+        style: { top: "10%", left: "40%", width: "20%", height: "10%" },
       },
     ],
     interactables: [
       {
         id: "exit_gate",
         type: "exit",
-        requiredItem: "sewer_key",
+        requiredItem: "badge", // L'ID de l'item requis
+
+        // Textes mis à jour pour coller au contexte "Badge"
         lockedMessage:
-          "La grille est fermée par un gros cadenas rouillé. Il me faut la clé.",
-        successMessage: "La clé tourne ! La grille s'ouvre. La liberté !",
+          "La porte blindée est verrouillée. Il y a un lecteur de badge rouge.",
+        successMessage:
+          "BIP VALIDÉ ! Le voyant passe au vert et la porte s'ouvre. La liberté !",
+
         style: { top: "60%", left: "35%", width: "30%", height: "20%" },
       },
       {
