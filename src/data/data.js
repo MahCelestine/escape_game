@@ -106,12 +106,27 @@ export const ROOMS_DATA = {
     ],
     interactables: [
       {
-        id: "loot_necklace",
-        itemId: "necklace", // Référence à ITEMS_DB
-        type: "loot",
-        collected: false, // État initial
-        dialogue: "J'ai pris le collier ! Ça brille !",
-        style: { top: "45%", left: "25%", width: "8%", height: "8%" }, // Sur une vitrine
+        id: "loot_necklace", // L'ID reste le même
+        itemId: "necklace", // La récompense quand on gagne, c'est le collier
+        type: "puzzle", // <--- CHANGEMENT : C'est maintenant un puzzle, pas un loot direct
+        puzzleType: "DIGICODE",
+
+        // L'ASTUCE : Solution vide
+        solution: "",
+
+        description: `PROTECTION VITRINE
+        Le code est composé de 4 chiffres.
+        - Aucun chiffre n’est répété
+        - Le 1er chiffre est pair
+        - Le 2e est le triple du 4e
+        - Le 3e est la somme du 1er et du 4e
+        - La somme totale des chiffres vaut 18
+        Quel est le code ?`,
+
+        clue: "Indice : Toutes les énigmes ne se résolvent pas par un code (Laissez vide et validez).",
+
+        // On garde la position sur la vitrine
+        style: { top: "45%", left: "25%", width: "8%", height: "8%" },
       },
     ],
   },
@@ -194,68 +209,6 @@ export const ROOMS_DATA = {
         collected: false,
         dialogue: "Attention à ne pas déchirer la toile...",
         style: { top: "30%", left: "60%", width: "12%", height: "15%" }, // Cadre au mur
-      },
-    ],
-  },
-
-  // 4. ACCUEIL (INDICE)
-  lobby: {
-    id: "lobby",
-    name: "Hall d'Accueil",
-    background: lobbyBg,
-    exits: [
-      {
-        target: "gallery",
-        label: "Retour Galerie",
-        style: { top: "30%", left: "40%", width: "20%", height: "30%" },
-      },
-      {
-        target: "lockers",
-        label: "Vestiaires",
-        style: { top: "40%", left: "80%", width: "10%", height: "40%" },
-      },
-    ],
-    interactables: [
-      {
-        id: "clue_note",
-        type: "clue",
-        dialogue:
-          "Un post-it sur l'écran : 'Code vestiaire : Année de création (1923)'",
-        style: { top: "55%", left: "45%", width: "10%", height: "5%" }, // Sur le comptoir
-      },
-      {
-        id: "locked_door",
-        type: "info",
-        dialogue:
-          "La porte principale est blindée. Impossible de sortir par là.",
-        style: { top: "30%", left: "10%", width: "20%", height: "40%" },
-      },
-    ],
-  },
-
-  // 5. VESTIAIRES (CLÉ)
-  lockers: {
-    id: "lockers",
-    name: "Vestiaires du Personnel",
-    background: lockersBg,
-    exits: [
-      {
-        target: "lobby",
-        label: "Retour Accueil",
-        style: { top: "85%", left: "30%", width: "40%", height: "10%" },
-      },
-    ],
-    interactables: [
-      {
-        id: "locker_puzzle",
-        itemId: "sewer_key",
-        type: "puzzle", // Spécial : nécessite un code
-        codeRequired: "1923",
-        collected: false,
-        lockedMessage: "C'est fermé par un cadenas à code à 4 chiffres.",
-        successMessage:
-          "Clic ! Le casier s'ouvre. Il y a une clé rouillée dedans.",
-        style: { top: "40%", left: "50%", width: "10%", height: "30%" }, // Un casier spécifique
       },
     ],
   },
