@@ -18,7 +18,7 @@ function Option({
   const navigate = useNavigate();
 
   const restartGame = () => {
-    navigate("/a");
+    navigate("/");
   };
 
   useEffect(() => {
