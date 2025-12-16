@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const GAME_DURATION = 0.1 * 60 * 1000;
 
@@ -39,7 +39,7 @@ function Timer({ onTimeUp }) {
 
     intervalRef.current = setInterval(() => {
       if (!startTimeRef.current) return;
-
+      
       const remaining = calculateTimeLeft(startTimeRef.current, GAME_DURATION);
       setTimeLeft(remaining);
 
@@ -72,13 +72,7 @@ function Timer({ onTimeUp }) {
   }, [isFinished, navigate]);
 
   return (
-    <div
-      style={{
-        backgroundColor: "rgba(0,0,0,0.6)",
-        padding: "1%",
-        borderRadius: "5px",
-      }}
-    >
+    <div style={{backgroundColor: "rgba(0,0,0,0.6)",padding:"1%", borderRadius:"5px"}}>
       <h2>{formatTime(timeLeft)}</h2>
       <div>
         {!isRunning && !isFinished && (
