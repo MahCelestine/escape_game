@@ -97,7 +97,7 @@ function JeuPrincipal() {
           Valeur : ${inventory.reduce((total, item) => total + item.value, 0)}
         </div>
       </div> */}
-      <Inventaire />
+      <Inventaire items={inventory} />
 
       {/* LA VUE DE LA SALLE */}
       <VueSalle

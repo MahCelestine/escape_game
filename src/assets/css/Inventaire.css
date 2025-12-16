@@ -1,0 +1,87 @@
+/* --- LE CONTENEUR (Inventaire.jsx) --- */
+.inventory-container {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 90px;
+  max-height: 80vh;
+  
+  /* Style Glassmorphism */
+  background: rgba(18, 25, 40, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 20px;
+  
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  z-index: 50;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.inventory-container::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.settings-btn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: transform 0.3s;
+  filter: grayscale(100%) brightness(200%); /* Rend l'icône blanche/grise */
+}
+
+.settings-btn:hover {
+  transform: rotate(90deg);
+}
+
+.divider {
+  width: 80%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 5px;
+}
+
+/* --- L'OBJET INDIVIDUEL (InventaireItem.jsx) --- */
+.inventory-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Effet rebond */
+}
+
+.item-icon {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  /* Une petite ombre portée pour détacher l'objet du fond */
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  margin-bottom: 4px;
+  transition: transform 0.2s;
+}
+
+.inventory-item:hover .item-icon {
+  transform: scale(1.1);
+}
+
+.item-value {
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
