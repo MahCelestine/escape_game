@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import VueSalle from "../components/VueSalle";
 import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
@@ -7,7 +7,7 @@ import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
 import BoiteDialogue from '../components/BoiteDialogue';
 
-const GAME_DURATION = 0.1 * 60 * 1000
+const GAME_DURATION = 0.1 * 60 * 1000;
 
 function JeuPrincipal() {
   // --- 1. LES ÉTATS (STATE) ---
@@ -36,7 +36,9 @@ function JeuPrincipal() {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const calculateTimeLeft = (startTime, duration) => {
@@ -193,11 +195,26 @@ function JeuPrincipal() {
   const handlePuzzleSuccess = () => {
     if (!activePuzzle) return;
 
-    // 1. Récupérer la récompense liée à ce puzzle
+    // On ferme le modal tout de suite
+    setActivePuzzle(null);
+
+    // On cherche l'objet
     const rewardItem = ITEMS_DB[activePuzzle.itemId];
 
-    // 2. Ajouter à l'inventaire
-    setInventory((prev) => [...prev, rewardItem]);
+    // SÉCURITÉ : Si l'objet n'existe pas dans la DB, on ne fait rien (évite l'écran blanc)
+    if (!rewardItem) {
+      console.error(
+        `ERREUR: L'objet "${activePuzzle.itemId}" est introuvable dans ITEMS_DB.`
+      );
+      return;
+    }
+
+    setInventory((prev) => {
+      // On évite les doublons par sécurité
+      const exists = prev.find((i) => i.id === rewardItem.id);
+      if (exists) return prev;
+      return [...prev, rewardItem];
+    });
 
     // 3. Feedback
     setDialogueTitle("Système piraté !");
@@ -235,7 +252,7 @@ function JeuPrincipal() {
           timeLeft={timeLeft}
           isRunning={isTimerRunning}
           isFinished={isTimerFinished}
-          items={inventory}
+          items={inventory.filter((item) => item.type !== "trigger")}
           onStart={startTimer}
           formatTime={formatTime}
         />
@@ -247,7 +264,8 @@ function JeuPrincipal() {
         </div> */}
       </div>
 
-      <Inventaire items={inventory}
+      <Inventaire
+        items={inventory.filter((item) => item.type !== "trigger")}
         timeLeft={timeLeft}
         isRunning={isTimerRunning}
         isFinished={isTimerFinished}
@@ -255,7 +273,8 @@ function JeuPrincipal() {
         onResume={resumeTimer}
         onReset={resetTimer}
         onStart={startTimer}
-        formatTime={formatTime} />
+        formatTime={formatTime}
+      />
 
       {/* LA VUE DE LA SALLE */}
       <VueSalle
