@@ -1,7 +1,7 @@
 import React from "react";
 import "../assets/css/VueSalle.css"; // Assure-toi que le chemin est bon
 
-const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
+const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) => {
   if (!room) return <div className="loading">Chargement de la salle...</div>;
 
   const getArrowRotation = (direction) => {
@@ -28,6 +28,9 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
         height: "100%",
         overflow: "hidden",
         backgroundColor: "#000",
+        // Bloquer les interactions quand disabled est true
+        pointerEvents: disabled ? "none" : "auto",
+        opacity: disabled ? 0.5 : 1, // Optionnel : assombrir légèrement
       }}
     >
       {/* 1. IMAGE DE FOND */}
@@ -39,6 +42,8 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
           height: "100%",
           objectFit: "cover",
           display: "block",
+          filter: disabled ? "brightness(0.5)" : "brightness(1)",
+          transition: "filter 0.3s ease",
         }}
       />
 
@@ -46,18 +51,18 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
       {room.exits.map((exit, index) => (
         <div
           key={`exit-${index}`}
-          onClick={() => onInteract({ type: "navigation", ...exit })}
+          onClick={() => !disabled && onInteract({ type: "navigation", ...exit })}
           className="hitbox exit-zone"
-          title={exit.label}
+          title={disabled ? "" : exit.label}
           style={{
             position: "absolute",
-            cursor: "pointer",
+            cursor: disabled ? "default" : "pointer",
             zIndex: 10,
             ...exit.style,
-            // Flexbox pour centrer la flèche dans la zone de clic
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            opacity: disabled ? 0.5 : 1,
           }}
         >
           <svg
@@ -65,14 +70,13 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
             viewBox="0 0 24 24"
             fill="currentColor"
             className="nav-arrow"
-            // C'est ici que la magie opère :
             style={{
-              width: "40px", // Taille de la flèche
+              width: "40px",
               height: "40px",
-              color: "white", // Ou 'rgba(255,255,255,0.8)'
-              filter: "drop-shadow(0px 0px 5px black)", // Pour la lisibilité
+              color: "white",
+              filter: "drop-shadow(0px 0px 5px black)",
               transition: "transform 0.3s",
-              transform: getArrowRotation(exit.arrow), // <--- ROTATION DYNAMIQUE
+              transform: getArrowRotation(exit.arrow),
             }}
           >
             <path
@@ -87,7 +91,7 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
       {/* 3. ZONES D'INTERACTION (Objets / Puzzles) */}
       {room.interactables.map((item) => {
         const isCollected = collectedItems.includes(item.itemId || item.id);
-        // On n'affiche pas les objets déjà ramassés
+        
         if (
           (item.type === "loot" ||
             item.type === "key" ||
@@ -108,8 +112,8 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
         return (
           <div
             key={item.id}
-            onClick={() => {
-              if (item.type === "decoration") {
+            onClick={(e) => {
+              if (disabled || item.type === "decoration") {
                 e.stopPropagation();
                 return;
               }
@@ -121,13 +125,28 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
             title={item.type === "decoration" ? "" : item.label || "Examiner"}
             style={{
               position: "absolute",
-              cursor: item.type === "decoration" ? "default" : "pointer",
+              cursor: disabled || item.type === "decoration" ? "default" : "pointer",
               zIndex: item.zIndex || 20,
               ...item.style,
+              opacity: disabled ? 0.5 : 1,
             }}
           ></div>
         );
       })}
+      {disabled && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 30,
+            pointerEvents: "all", // Bloque tous les clics
+            cursor: disabled || item.type === "decoration" ? "default" : "default",
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
 import BoiteDialogue from "../components/BoiteDialogue";
 
-const GAME_DURATION = 0.1 * 60 * 1000;
+const GAME_DURATION = 20 * 60 * 1000;
 
 function JeuPrincipal() {
   // --- 1. LES ÉTATS (STATE) ---
@@ -17,6 +17,9 @@ function JeuPrincipal() {
 
   const [dialogueMessage, setDialogueMessage] = useState(null);
   const [dialogueTitle, setDialogueTitle] = useState(null);
+
+  const [isOptionOpen, setIsOptionOpen] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
 
   // const pour le timer
 
@@ -50,6 +53,7 @@ function JeuPrincipal() {
 
     startTimeRef.current = Date.now();
     setIsTimerRunning(true);
+    setGameStarted(true);
 
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -107,6 +111,7 @@ function JeuPrincipal() {
     clearInterval(intervalRef.current);
     setIsTimerRunning(false);
     setIsTimerFinished(false);
+    setGameStarted(false);
     setTimeLeft(GAME_DURATION);
     startTimeRef.current = null;
   };
@@ -137,8 +142,8 @@ function JeuPrincipal() {
 
   // --- 2. LA FONCTION D'INTERACTION ---
   const handleInteraction = (item) => {
+    if (gameStarted && !isTimerRunning) return;
     // [SUPPRIMÉ] Le bloc qui déclenchait le timer est parti.
-
     // Gérer les types d'actions
     switch (item.type) {
       case "navigation":
@@ -279,7 +284,27 @@ function JeuPrincipal() {
         onInteract={handleInteraction}
         // On passe la liste des IDs pour que VueSalle sache quoi cacher
         collectedItems={inventory.map((item) => item.id)}
+        disabled={isOptionOpen && gameStarted && !isTimerRunning}
       />
+
+      {gameStarted && !isTimerRunning && !isTimerFinished && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.7)", // Filtre noir semi-transparent
+            zIndex: 49, // Au-dessus de la scène mais en-dessous du HUD et inventaire
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            pointerEvents: "none", // Permet de cliquer à travers si nécessaire
+          }}
+        >
+        </div>
+      )}
 
       <PuzzleModal
         puzzle={activePuzzle}

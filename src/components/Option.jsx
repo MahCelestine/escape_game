@@ -13,13 +13,16 @@ function Option({
   onStart,
   formatTime
 }) {
-  const GAME_DURATION = 0.2 * 60 * 1000;
+  const GAME_DURATION = 20 * 60 * 1000;
 
   const navigate = useNavigate();
 
   const restartGame = () => {
     navigate("/");
   };
+
+  const isGameStarted = timeLeft < GAME_DURATION;
+  const isPaused = isGameStarted && !isFinished && !isRunning;
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -39,15 +42,12 @@ function Option({
         document.body.style.overflow = 'unset';
       };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, isPaused]);
 
   if (!isOpen) return null;
 
-  const isGameStarted = timeLeft < GAME_DURATION && !isFinished;
-  const isPaused = isGameStarted && !isRunning; // Nouvelle variable pour savoir si le jeu est en pause
-
   return (
-    <div 
+    <div
       onClick={() => {
         // Si le jeu est en pause, on empêche la fermeture en cliquant à l'extérieur
         if (!isPaused) onClose();
@@ -60,23 +60,23 @@ function Option({
         bottom: 0,
         marginLeft: '200px',
         // Fond noir opaque quand le jeu est en pause
-        backgroundColor:  'rgba(0,0,0,0.7)',
+        backgroundColor: 'rgba(0,0,0,0.7)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 2000, // Z-index très élevé pour être au-dessus de tout
       }}
     >
-      <div 
+      <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor:'#1a1a2e',
+          backgroundColor: '#1a1a2e',
           padding: '25px',
           borderRadius: '12px',
           minWidth: '350px',
           color: 'white',
-          border:'1px solid rgba(148, 163, 184, 0.3)',
-          background:'rgba(18, 25, 40, 0.85)',
+          border: '1px solid rgba(148, 163, 184, 0.3)',
+          background: 'rgba(18, 25, 40, 0.85)',
           boxShadow: 'none',
         }}
       >
@@ -92,7 +92,7 @@ function Option({
           </h3>
           {/* Cacher le bouton de fermeture quand le jeu est en pause */}
           {!isPaused && (
-            <button 
+            <button
               onClick={onClose}
               style={{
                 background: 'none',
@@ -106,7 +106,7 @@ function Option({
             </button>
           )}
         </div>
-        
+
         <div style={{
           textAlign: 'center',
           marginBottom: '30px',
@@ -136,24 +136,24 @@ function Option({
               borderRadius: '50%',
               backgroundColor: isRunning ? '#00ff00' : isFinished ? '#ff4757' : '#ffa500'
             }}></span>
-            {isRunning ? 'Mission en cours' : 
-             isFinished ? 'Mission terminée' : 
-             isPaused ? 'Mission en pause' : 'Prêt à démarrer'}
+            {isRunning ? 'Mission en cours' :
+              isFinished ? 'Mission terminée' :
+                isPaused ? 'Mission en pause' : 'Prêt à démarrer'}
           </div>
         </div>
         <div className="divider_option" style={{
           marginBottom: '25px',
         }}></div>
-        
+
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           gap: '12px'
         }}>
-          {!isFinished && (
+          {isGameStarted && !isFinished && (
             <>
               {isRunning && (
-                <button 
+                <button
                   onClick={() => {
                     onPause();
                   }}
@@ -169,9 +169,9 @@ function Option({
                   <span>⏸</span> Mettre en Pause
                 </button>
               )}
-              
+
               {isPaused && (
-                <button 
+                <button
                   onClick={() => {
                     onResume();
                     onClose();
@@ -190,8 +190,8 @@ function Option({
               )}
             </>
           )}
-          
-          <button 
+
+          <button
             onClick={() => {
               onReset();
               restartGame();
