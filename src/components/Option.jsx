@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Option({
   isOpen,
@@ -11,7 +11,7 @@ function Option({
   onResume,
   onReset,
   onStart,
-  formatTime
+  formatTime,
 }) {
   const GAME_DURATION = 20 * 60 * 1000;
 
@@ -35,11 +35,11 @@ function Option({
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
       return () => {
-        document.removeEventListener('keydown', handleEscape);
-        document.body.style.overflow = 'unset';
+        document.removeEventListener("keydown", handleEscape);
+        document.body.style.overflow = "unset";
       };
     }
   }, [isOpen, onClose, isPaused]);
@@ -53,7 +53,7 @@ function Option({
         if (!isPaused) onClose();
       }}
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,

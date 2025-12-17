@@ -31,9 +31,6 @@ function JeuPrincipal() {
   const startTimeRef = useRef(null);
   const hasTimerStarted = useRef(false);
 
-
-
-
   const formatTime = (ms) => {
     if (ms <= 0) return "00:00";
     const totalSeconds = Math.floor(ms / 1000);
@@ -224,9 +221,6 @@ function JeuPrincipal() {
     // 3. Feedback
     setDialogueTitle("Système piraté !");
     setDialogueMessage(`Vous avez obtenu : ${rewardItem.name}`);
-
-    // 4. Fermer la modale
-    setActivePuzzle(null);
   };
 
   return (

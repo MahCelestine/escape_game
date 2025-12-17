@@ -4,22 +4,31 @@ import storageBg from "../assets/img/Stockage.jpg";
 import surveillanceBg from "../assets/img/Salle de surveillance casier fermé.jpg";
 import basementBg from "../assets/img/Sous-sol.jpg";
 
+// Vidéo
+// import basementBg from "../assets/img/Sous-sol video.gif";
+
 // Inventaire Items
 import BadgeIcon from "../assets/img/inventory/badge.png";
 import DiamondIcon from "../assets/img/inventory/diamant-item.png";
 import DoigtIcon from "../assets/img/inventory/doigt-item.png";
 import FetishIcon from "../assets/img/inventory/fetiche-item.png";
-// import JewelryIcon from "../assets/img/inventory/jewels-item.png";
+import JewelryIcon from "../assets/img/inventory/collier.png";
 import PaintingIcon from "../assets/img/inventory/Tableau-item.png";
-// import CoinIcon from "../assets/img/inventory/coin-item.png";
+import CoinIcon from "../assets/img/inventory/Pièces ancienne.png";
 
 // Énigme
 import FindNumberIMG from "../assets/img/enigma/aquarelle-paper-texture.jpg";
 import Sudoku from "../assets/img/enigma/postit.png";
 import CodeBaton from "../assets/img/enigma/code5.jpg";
+import Taquin from "../assets/img/enigma/enigme2.png";
 
 // Trigger
 import TrapdoorOpenIMG from "../assets/img/icons/Trappe Doit Fossilisé.png";
+import DeskOpenIMG from "../assets/img/icons/Bureau.png";
+
+// Indices
+import NoteIMG from "../assets/img/indices/indice5.png";
+import ClueNoteIMG from "../assets/img/indices/camera-indice.jpg";
 
 export const GAME_CONFIG = {
   startingRoom: "gallery",
@@ -40,7 +49,7 @@ export const ITEMS_DB = {
     name: "Bijoux",
     type: "loot",
     value: 40000,
-    image: "/assets/icons/necklace.png",
+    image: JewelryIcon,
     description: "La petite led passe au vert, plus qu’à prendre les bijoux!",
   },
   painting: {
@@ -74,7 +83,7 @@ export const ITEMS_DB = {
     name: "Pièce de monnaie ancienne",
     type: "loot",
     value: 4200,
-    image: "/assets/icons/coin.png",
+    image: CoinIcon,
     description:
       "Je connais pas vraiment sa valeur, mais c’est une bonne prise !",
   },
@@ -125,8 +134,7 @@ export const ROOMS_DATA = {
         itemId: "jewels",
         type: "puzzle",
         puzzleType: "SLIDING",
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/402px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+        image: Taquin,
         description:
           "Reconstituez le chef-d'œuvre pour désactiver l'alarme du cadre.",
         style: {
@@ -134,7 +142,6 @@ export const ROOMS_DATA = {
           left: "45%",
           width: "10%",
           height: "25%",
-          border: "2px solid red",
         },
       },
     ],
@@ -161,6 +168,19 @@ export const ROOMS_DATA = {
     ],
     interactables: [
       {
+        id: "clue_note",
+        type: "clue",
+        image: NoteIMG,
+        description: "Une image placée sur un livre",
+        style: {
+          top: "55%",
+          left: "45%",
+          width: "10%",
+          height: "5%",
+          border: "red 2px solid",
+        },
+      },
+      {
         id: "loot_diamond",
         itemId: "diamond",
         type: "puzzle",
@@ -175,7 +195,6 @@ export const ROOMS_DATA = {
           left: "45%",
           width: "10%",
           height: "15%",
-          border: "2px solid red",
         },
       },
       {
@@ -190,7 +209,6 @@ export const ROOMS_DATA = {
           left: "7.5%",
           width: "45%",
           height: "45%",
-          border: "2px solid blue",
         },
       },
     ],
@@ -234,7 +252,6 @@ export const ROOMS_DATA = {
           left: "52%",
           width: "5%",
           height: "15%",
-          border: "2px solid green",
         },
       },
 
@@ -251,7 +268,6 @@ export const ROOMS_DATA = {
           left: "55%",
           width: "7.5%",
           height: "35%",
-          border: "2px solid orange",
         },
       },
     ],
@@ -277,6 +293,19 @@ export const ROOMS_DATA = {
       },
     ],
     interactables: [
+      {
+        id: "clue_code",
+        type: "clue",
+        image: NoteIMG,
+        description: "Une feuille placée sur le bureau",
+        style: {
+          top: "55%",
+          left: "45%",
+          width: "10%",
+          height: "5%",
+          border: "red 2px solid",
+        },
+      },
       {
         id: "locker_puzzle",
         itemId: "badge",
@@ -341,11 +370,10 @@ export const ROOMS_DATA = {
         puzzleType: "HIDDEN_WORD",
         description: "Tu ne trouveras [rien] ici.",
         style: {
-          top: "65%",
-          left: "17.5%",
+          top: "62.5%",
+          left: "15%",
           width: "15%",
           height: "25%",
-          border: "2px solid purple",
           zIndex: 30,
         },
       },
@@ -375,11 +403,10 @@ export const ROOMS_DATA = {
         visibleIf: "trapdoor_trigger",
         dialogue: "Berk... J'ai récupéré le doigt.",
         style: {
-          top: "75%",
-          left: "22%",
+          top: "77.5%",
+          left: "18.5%",
           width: "6%",
           height: "8%",
-          border: "1px solid red",
           zIndex: 25,
         },
       },
