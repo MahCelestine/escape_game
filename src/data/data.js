@@ -258,7 +258,7 @@ export const ROOMS_DATA = {
         itemId: "painting",
         type: "puzzle",
         puzzleType: "CODE_INPUT",
-        solution: "SECRET",
+        solution: "STOCK",
         image: CodeBaton,
         description: "Déchiffrez le message caché.",
         style: {

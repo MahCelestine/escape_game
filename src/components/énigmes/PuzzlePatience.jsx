@@ -83,8 +83,6 @@ const PuzzlePatience = ({ data, onSuccess }) => {
         }
       `}</style>
 
-      <h3 style={{ color: "#fbbf24", fontSize: "24px" }}>{timeLeft}s</h3>
-
       <p
         style={{
           color: timeLeft === START_TIME ? "#ef4444" : "#94a3b8",
