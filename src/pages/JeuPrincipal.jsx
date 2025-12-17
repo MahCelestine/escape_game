@@ -5,7 +5,7 @@ import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
 import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
-import ItemInventaire from "../components/ItemInventaire";
+import BoiteDialogue from '../components/BoiteDialogue';
 
 const GAME_DURATION = 0.1 * 60 * 1000;
 
@@ -14,6 +14,9 @@ function JeuPrincipal() {
   const [currentRoomId, setCurrentRoomId] = useState(GAME_CONFIG.startingRoom);
   const [inventory, setInventory] = useState([]);
   const [activePuzzle, setActivePuzzle] = useState(null);
+
+  const [dialogueMessage, setDialogueMessage] = useState(null);
+  const [dialogueTitle, setDialogueTitle] = useState(null);
 
   // const pour le timer
 
@@ -24,6 +27,8 @@ function JeuPrincipal() {
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
   const hasTimerStarted = useRef(false);
+
+
 
 
   const formatTime = (ms) => {
@@ -120,8 +125,8 @@ function JeuPrincipal() {
     navigate("/Fin");
   };
 
-    useEffect(() => {
-    if (inventory.length == 1 && !hasTimerStarted.current){
+  useEffect(() => {
+    if (inventory.length == 1 && !hasTimerStarted.current) {
       startTimer();
     }
   }, [inventory]);
@@ -149,7 +154,8 @@ function JeuPrincipal() {
         if (fullItem) {
           setInventory([...inventory, fullItem]);
           // Petit feedback visuel simple (alert pour l'instant)
-          alert(`Volé : ${fullItem.name} ! (Valeur: $${fullItem.value})`);
+          setDialogueTitle("Objet volé !");
+          setDialogueMessage(`${fullItem.name} (Valeur: $${fullItem.value})`);
         }
         break;
 
@@ -160,16 +166,19 @@ function JeuPrincipal() {
       case "info":
       case "clue":
         // Affiche juste le message d'info
-        alert(item.dialogue);
+        setDialogueMessage(item.dialogue);
+        setDialogueTitle(null);
         break;
 
       case "exit":
         // Logique de fin simple pour tester
         const hasKey = inventory.some((i) => i.id === item.requiredItem);
         if (hasKey) {
-          alert("VICTOIRE ! Tu es sorti par les égouts !");
+          setDialogueTitle("VICTOIRE !");
+          setDialogueMessage("Tu es sorti par les égouts !");
         } else {
-          alert(item.lockedMessage);
+          setDialogueMessage(item.lockedMessage);
+          setDialogueTitle(null);
         }
         break;
 
@@ -207,12 +216,12 @@ function JeuPrincipal() {
       return [...prev, rewardItem];
     });
 
-    if (rewardItem.type !== "trigger") {
-      alert(`Système piraté ! Vous avez obtenu : ${rewardItem.name}`);
-    } else {
-      // Optionnel : Un petit son ou message différent pour la trappe
-      console.log("Trigger activé : ", rewardItem.name);
-    }
+    // 3. Feedback
+    setDialogueTitle("Système piraté !");
+    setDialogueMessage(`Vous avez obtenu : ${rewardItem.name}`);
+
+    // 4. Fermer la modale
+    setActivePuzzle(null);
   };
 
   return (
@@ -279,6 +288,16 @@ function JeuPrincipal() {
         puzzle={activePuzzle}
         onClose={() => setActivePuzzle(null)}
         onSuccess={handlePuzzleSuccess}
+      />
+
+      <BoiteDialogue
+        message={dialogueMessage}
+        title={dialogueTitle}
+        onClose={() => {
+          setDialogueMessage(null);
+          setDialogueTitle(null);
+        }}
+        duration={3000} // 3 secondes, mettre 0 pour fermeture manuelle uniquement
       />
     </div>
   );
