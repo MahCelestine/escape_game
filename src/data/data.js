@@ -4,12 +4,22 @@ import storageBg from "../assets/img/Stockage.jpg";
 import surveillanceBg from "../assets/img/Salle de surveillance casier fermé.jpg";
 import basementBg from "../assets/img/Sous-sol.jpg";
 
-import BadgeIcon from "../assets/img/icons/Badge.png";
+// Inventaire Items
+import BadgeIcon from "../assets/img/inventory/badge.png";
+import DiamondIcon from "../assets/img/inventory/diamant-item.png";
+import DoigtIcon from "../assets/img/inventory/doigt-item.png";
+import FetishIcon from "../assets/img/inventory/fetiche-item.png";
+// import JewelryIcon from "../assets/img/inventory/jewels-item.png";
+import PaintingIcon from "../assets/img/inventory/Tableau-item.png";
+// import CoinIcon from "../assets/img/inventory/coin-item.png";
 
 // Énigme
 import FindNumberIMG from "../assets/img/enigma/aquarelle-paper-texture.jpg";
 import Sudoku from "../assets/img/enigma/postit.png";
 import CodeBaton from "../assets/img/enigma/code5.jpg";
+
+// Trigger
+import TrapdoorOpenIMG from "../assets/img/icons/Trappe Doit Fossilisé.png";
 
 export const GAME_CONFIG = {
   startingRoom: "gallery",
@@ -22,7 +32,7 @@ export const ITEMS_DB = {
     name: "Diamant",
     type: "loot",
     value: 45000,
-    image: "/assets/icons/diamond.png",
+    image: DiamondIcon,
     description: "Un Diamant ??? Ah oui ! Ça valait le coup !",
   },
   jewels: {
@@ -38,7 +48,7 @@ export const ITEMS_DB = {
     name: "Toile",
     type: "loot",
     value: 18000,
-    image: "/assets/icons/painting.png",
+    image: PaintingIcon,
     description: "Bon, j’espère que cette toile en vaut le coup.",
   },
   fetish: {
@@ -46,7 +56,7 @@ export const ITEMS_DB = {
     name: "Fétiche",
     type: "loot",
     value: 3500,
-    image: "/assets/icons/fetish.png",
+    image: FetishIcon,
     description:
       "euh… super sa c’est ouvert mais j’ai juste rien fait là- ooooh j’ai compris ! fallait juste pas bouger.",
   },
@@ -55,7 +65,7 @@ export const ITEMS_DB = {
     name: "Doigt Fossilisé",
     type: "loot",
     value: 9300,
-    image: "/assets/icons/fossil.png",
+    image: DoigtIcon,
     description:
       "Fallait juste pousser un peu le placo, mais ce truc vaut vraiment du fric ? J’ai un doute…",
   },
@@ -76,6 +86,16 @@ export const ITEMS_DB = {
     image: BadgeIcon,
     description:
       "Un petit badge avec la tête d’un monsieur au visage disgracieux est à l'intérieur. C’est un badge de sécurité ! Très certainement que ça sera utile pour sortir d’ici.",
+  },
+
+  // Trigger
+  trapdoor_trigger: {
+    id: "trapdoor_trigger",
+    name: "Trappe Déverrouillée",
+    type: "trigger",
+    value: 0,
+    image: TrapdoorOpenIMG,
+    description: "Une trappe caché dans le mur.",
   },
 };
 
@@ -310,13 +330,13 @@ export const ROOMS_DATA = {
         requiredItem: "badge",
         lockedMessage:
           "La porte blindée est verrouillée. Il y a un lecteur de badge rouge.",
-        successMessage:
-          "BIP VALIDÉ ! Le voyant passe au vert et la porte s'ouvre. La liberté !",
+        successMessage: "BIP VALIDÉ ! La porte s'ouvre.",
         style: { top: "60%", left: "35%", width: "30%", height: "20%" },
       },
+
       {
-        id: "loot_fossil",
-        itemId: "fossil",
+        id: "wall_puzzle",
+        itemId: "trapdoor_trigger",
         type: "puzzle",
         puzzleType: "HIDDEN_WORD",
         description: "Tu ne trouveras [rien] ici.",
@@ -326,6 +346,41 @@ export const ROOMS_DATA = {
           width: "15%",
           height: "25%",
           border: "2px solid purple",
+          zIndex: 30,
+        },
+      },
+
+      {
+        id: "trapdoor_visual",
+        type: "decoration",
+        visibleIf: "trapdoor_trigger",
+        hideIf: "fossil",
+        style: {
+          top: "35%",
+          left: "13%",
+          width: "50%",
+          height: "80%",
+          backgroundImage: `url(${TrapdoorOpenIMG})`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          zIndex: 15,
+          pointerEvents: "none",
+        },
+      },
+
+      {
+        id: "loot_fossil_real",
+        itemId: "fossil",
+        type: "loot",
+        visibleIf: "trapdoor_trigger",
+        dialogue: "Berk... J'ai récupéré le doigt.",
+        style: {
+          top: "75%",
+          left: "22%",
+          width: "6%",
+          height: "8%",
+          border: "1px solid red",
+          zIndex: 25,
         },
       },
     ],

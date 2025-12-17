@@ -88,24 +88,44 @@ const VueSalle = ({ room, onInteract, collectedItems = [] }) => {
       {room.interactables.map((item) => {
         const isCollected = collectedItems.includes(item.itemId || item.id);
         // On n'affiche pas les objets déjà ramassés
-        if (isCollected) return null;
+        if (
+          (item.type === "loot" ||
+            item.type === "key" ||
+            item.type === "puzzle") &&
+          isCollected
+        ) {
+          return null;
+        }
+
+        if (item.visibleIf && !collectedItems.includes(item.visibleIf)) {
+          return null;
+        }
+
+        if (item.hideIf && collectedItems.includes(item.hideIf)) {
+          return null;
+        }
 
         return (
           <div
             key={item.id}
-            onClick={() => onInteract(item)}
-            className="hitbox item-zone"
-            title={item.type === "loot" ? "Ramasser" : "Examiner"}
+            onClick={() => {
+              if (item.type === "decoration") {
+                e.stopPropagation();
+                return;
+              }
+              onInteract(item);
+            }}
+            className={`hitbox ${
+              item.type === "decoration" ? "" : "item-zone"
+            }`}
+            title={item.type === "decoration" ? "" : item.label || "Examiner"}
             style={{
               position: "absolute",
-              cursor: "pointer",
-              zIndex: 20,
+              cursor: item.type === "decoration" ? "default" : "pointer",
+              zIndex: item.zIndex || 20,
               ...item.style,
             }}
-          >
-            {/* J'ai supprimé le <span> avec debugTextStyle ici car il causait l'erreur. 
-                Les zones d'objets seront invisibles sauf si tu as gardé le CSS .item-zone avec un fond rouge/transparent */}
-          </div>
+          ></div>
         );
       })}
     </div>
