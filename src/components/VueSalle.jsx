@@ -1,7 +1,12 @@
 import React from "react";
 import "../assets/css/VueSalle.css"; // Assure-toi que le chemin est bon
 
-const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) => {
+const VueSalle = ({
+  room,
+  onInteract,
+  collectedItems = [],
+  disabled = false,
+}) => {
   if (!room) return <div className="loading">Chargement de la salle...</div>;
 
   const getArrowRotation = (direction) => {
@@ -19,6 +24,13 @@ const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) =
     }
   };
 
+  const backgroundStyle = {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  };
+
   return (
     <div
       className="scene-container"
@@ -28,30 +40,41 @@ const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) =
         height: "100%",
         overflow: "hidden",
         backgroundColor: "#000",
-        // Bloquer les interactions quand disabled est true
         pointerEvents: disabled ? "none" : "auto",
         opacity: disabled ? 0.5 : 1, // Optionnel : assombrir légèrement
       }}
     >
-      {/* 1. IMAGE DE FOND */}
-      <img
-        src={room.background}
-        alt={room.name}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-          filter: disabled ? "brightness(0.5)" : "brightness(1)",
-          transition: "filter 0.3s ease",
-        }}
-      />
+      {/* 1. IMAGE ou Vidéo DE FOND */}
+      {room.backgroundType === "video" ? (
+        <video
+          src={room.background}
+          style={backgroundStyle}
+          autoPlay
+          loop
+          muted
+        />
+      ) : (
+        <img
+          src={room.background}
+          alt={room.name}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            filter: disabled ? "brightness(0.5)" : "brightness(1)",
+            transition: "filter 0.3s ease",
+          }}
+        />
+      )}
 
       {/* 2. ZONES DE NAVIGATION (Avec les Flèches) */}
       {room.exits.map((exit, index) => (
         <div
           key={`exit-${index}`}
-          onClick={() => !disabled && onInteract({ type: "navigation", ...exit })}
+          onClick={() =>
+            !disabled && onInteract({ type: "navigation", ...exit })
+          }
           className="hitbox exit-zone"
           title={disabled ? "" : exit.label}
           style={{
@@ -91,7 +114,7 @@ const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) =
       {/* 3. ZONES D'INTERACTION (Objets / Puzzles) */}
       {room.interactables.map((item) => {
         const isCollected = collectedItems.includes(item.itemId || item.id);
-        
+
         if (
           (item.type === "loot" ||
             item.type === "key" ||
@@ -125,7 +148,8 @@ const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) =
             title={item.type === "decoration" ? "" : item.label || "Examiner"}
             style={{
               position: "absolute",
-              cursor: disabled || item.type === "decoration" ? "default" : "pointer",
+              cursor:
+                disabled || item.type === "decoration" ? "default" : "pointer",
               zIndex: item.zIndex || 20,
               ...item.style,
               opacity: disabled ? 0.5 : 1,
@@ -143,7 +167,8 @@ const VueSalle = ({ room, onInteract, collectedItems = [], disabled = false }) =
             height: "100%",
             zIndex: 30,
             pointerEvents: "all", // Bloque tous les clics
-            cursor: disabled || item.type === "decoration" ? "default" : "default",
+            cursor:
+              disabled || item.type === "decoration" ? "default" : "default",
           }}
         />
       )}

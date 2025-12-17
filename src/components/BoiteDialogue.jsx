@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 function BoiteDialogue({ message, title, onClose, duration = 3000 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,33 +32,34 @@ function BoiteDialogue({ message, title, onClose, duration = 3000 }) {
   return (
     <div
       style={{
-        position: 'fixed',
-        bottom: '20px',
-        left: '50%',
-        transform: 'translateX(-50%)',
+        position: "fixed",
+        bottom: "20px",
+        left: "50%",
+        transform: "translateX(-50%)",
         zIndex: 1000,
-        maxWidth: '600px',
-        width: '90%',
+        maxWidth: "600px",
+        width: "90%",
       }}
     >
       <div
         style={{
-          backgroundColor:'#1a1a2e',
-          border:'1px solid rgba(148, 163, 184, 0.3)',
-          background:'rgba(18, 25, 40, 0.85)',
-          borderRadius: '15px',
-          padding: '20px 25px',
-          position: 'relative',
+          backgroundColor: "#1a1a2e",
+          border: "1px solid rgba(148, 163, 184, 0.3)",
+          background: "rgba(18, 25, 40, 0.85)",
+          borderRadius: "15px",
+          padding: "20px 25px",
+          position: "relative",
         }}
       >
         {/* Titre */}
         {title && (
           <h3
             style={{
-              margin: '0 0 10px 0',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              color:'#fff',
+              margin: "0 0 10px 0",
+              fontSize: "18px",
+              fontWeight: "bold",
+              color: "#fff",
+              fontFamily: "Calibri",
             }}
           >
             {title}
@@ -69,11 +70,12 @@ function BoiteDialogue({ message, title, onClose, duration = 3000 }) {
         {message && (
           <p
             style={{
-              color: '#ffffff',
+              color: "#ffffff",
               margin: 0,
-              fontSize: '16px',
-              lineHeight: '1.5',
-              paddingRight: title ? '0' : '30px',
+              fontSize: "16px",
+              fontFamily: "Calibri",
+              lineHeight: "1.5",
+              paddingRight: title ? "0" : "30px",
             }}
           >
             {message}

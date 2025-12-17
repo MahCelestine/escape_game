@@ -1,13 +1,12 @@
 // components/Timer.jsx
-import React from 'react';
+import React from "react";
 
-
-function Timer({ 
-  timeLeft = 0, 
-  isRunning = false, 
-  isFinished = false, 
+function Timer({
+  timeLeft = 0,
+  isRunning = false,
+  isFinished = false,
   formatTime,
-  onStart = () => {}
+  onStart = () => {},
 }) {
   // Fonction de formatage par défaut
   const defaultFormatTime = (ms) => {
@@ -15,7 +14,9 @@ function Timer({
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   // Utiliser la prop formatTime si elle est fournie, sinon utiliser la fonction par défaut
@@ -23,7 +24,7 @@ function Timer({
 
   return (
     <>
-      <h2 style={{ margin: 0 }}>
+      <h2 style={{ margin: 0, fontFamily: "Calibri" }}>
         {displayFormatTime(timeLeft)} {/* Utiliser displayFormatTime */}
       </h2>
     </>

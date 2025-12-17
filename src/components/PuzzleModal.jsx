@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+
+// Import des énigmes
 import PuzzleDigicode from "./énigmes/PuzzleDigicode.jsx";
 import PuzzleQuiz from "./énigmes/PuzzleQuiz.jsx";
 import PuzzleSliding from "./énigmes/PuzzleSliding.jsx";
@@ -7,14 +9,28 @@ import PuzzlePatience from "./énigmes/PuzzlePatience.jsx";
 import PuzzleHiddenWord from "./énigmes/PuzzleHiddenWord.jsx";
 import PuzzleSwitches from "./énigmes/PuzzleSwitches.jsx";
 
-const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
+// -------------------------------------------------------------
+// 1. LE COMPOSANT D'AFFICHAGE
+// -------------------------------------------------------------
+const PuzzleModalComponent = ({ puzzle, onClose, onSuccess }) => {
+  // Debug pour vérifier que le re-render est stoppé
+  useEffect(() => {
+    if (puzzle) {
+      console.log(`[PuzzleModal] NOUVEAU PUZZLE CHARGÉ : ${puzzle.id}`);
+    }
+  }, [puzzle]);
+
   if (!puzzle) return null;
 
   const renderPuzzleContent = () => {
+    // Clé unique stable basée sur l'ID de l'item
+    const uniqueKey = puzzle.id || puzzle.puzzleType;
+
     switch (puzzle.puzzleType) {
       case "DIGICODE":
         return (
           <PuzzleDigicode
+            key={uniqueKey}
             data={puzzle}
             onSuccess={onSuccess}
             onFailure={onClose}
@@ -22,23 +38,46 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
         );
       case "QUIZ":
         return (
-          <PuzzleQuiz data={puzzle} onSuccess={onSuccess} onFailure={onClose} />
+          <PuzzleQuiz
+            key={uniqueKey}
+            data={puzzle}
+            onSuccess={onSuccess}
+            onFailure={onClose}
+          />
         );
 
       case "SLIDING":
-        return <PuzzleSliding data={puzzle} onSuccess={onSuccess} />;
+        return (
+          <PuzzleSliding key={uniqueKey} data={puzzle} onSuccess={onSuccess} />
+        );
 
       case "CODE_INPUT":
-        return <PuzzleCodeInput data={puzzle} onSuccess={onSuccess} />;
+        return (
+          <PuzzleCodeInput
+            key={uniqueKey}
+            data={puzzle}
+            onSuccess={onSuccess}
+          />
+        );
 
       case "PATIENCE":
-        return <PuzzlePatience data={puzzle} onSuccess={onSuccess} />;
+        return (
+          <PuzzlePatience key={uniqueKey} data={puzzle} onSuccess={onSuccess} />
+        );
 
       case "HIDDEN_WORD":
-        return <PuzzleHiddenWord data={puzzle} onSuccess={onSuccess} />;
+        return (
+          <PuzzleHiddenWord
+            key={uniqueKey}
+            data={puzzle}
+            onSuccess={onSuccess}
+          />
+        );
 
       case "SWITCHES":
-        return <PuzzleSwitches data={puzzle} onSuccess={onSuccess} />;
+        return (
+          <PuzzleSwitches key={uniqueKey} data={puzzle} onSuccess={onSuccess} />
+        );
 
       default:
         return (
@@ -50,7 +89,6 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
   };
 
   return (
-    // L'Overlay sombre par-dessus le jeu
     <div
       style={{
         position: "fixed",
@@ -65,7 +103,6 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
         alignItems: "center",
       }}
     >
-      {/* La Boîte de l'énigme */}
       <div
         style={{
           backgroundColor: "#1e293b",
@@ -78,7 +115,6 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
           boxShadow: "0 0 30px rgba(251, 191, 36, 0.2)",
         }}
       >
-        {/* Bouton fermer (Croix) */}
         <button
           onClick={onClose}
           style={{
@@ -95,7 +131,6 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
           ✕
         </button>
 
-        {/* Titre de l'énigme */}
         <h2
           style={{
             color: "#fbbf24",
@@ -107,11 +142,27 @@ const PuzzleModal = ({ puzzle, onClose, onSuccess }) => {
           SYSTEME DE SÉCURITÉ
         </h2>
 
-        {/* Le contenu spécifique de l'énigme */}
         {renderPuzzleContent()}
       </div>
     </div>
   );
 };
+
+// -------------------------------------------------------------
+// 2. LE BOUCLIER (Comparaison personnalisée)
+// -------------------------------------------------------------
+// C'est ici que la magie opère. On force React à ignorer les mises à jour
+// venant du parent SI l'ID du puzzle est le même qu'avant.
+const arePropsEqual = (prevProps, nextProps) => {
+  const prevId = prevProps.puzzle ? prevProps.puzzle.id : null;
+  const nextId = nextProps.puzzle ? nextProps.puzzle.id : null;
+
+  // Si c'est le même ID (ex: "loot_fetish"), on renvoie TRUE.
+  // TRUE = "Ne change rien, ne te redessine pas, ignore le Timer du parent".
+  return prevId === nextId;
+};
+
+// On exporte le composant protégé par memo + arePropsEqual
+const PuzzleModal = React.memo(PuzzleModalComponent, arePropsEqual);
 
 export default PuzzleModal;

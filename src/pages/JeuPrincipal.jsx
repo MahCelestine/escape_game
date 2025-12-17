@@ -5,7 +5,10 @@ import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
 import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
-import BoiteDialogue from '../components/BoiteDialogue';
+import BoiteDialogue from "../components/BoiteDialogue";
+import IndiceModal from "../components/IndiceModal";
+
+import AmbianceSound from "../assets/audio/musique fond.mp3";
 
 const GAME_DURATION = 20 * 60 * 1000;
 
@@ -21,6 +24,7 @@ function JeuPrincipal() {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
+  const [activeClue, setActiveClue] = useState(null);
   // const pour le timer
 
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
@@ -123,9 +127,35 @@ function JeuPrincipal() {
     setTimeLeft(0);
     startTimeRef.current = null;
 
-    // Naviguer vers l'écran de fin
-    navigate("/Fin");
+    navigate("/Fin", {
+      state: {
+        win: false,
+        reason: "Le temps est écoulé. La police est arrivée.",
+        inventory: inventory,
+      },
+    });
   };
+
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = 0.3;
+
+      const playPromise = audio.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          const resumeAudio = () => {
+            audio.play();
+            document.removeEventListener("click", resumeAudio);
+          };
+          document.addEventListener("click", resumeAudio);
+        });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (inventory.length == 1 && !hasTimerStarted.current) {
@@ -167,17 +197,30 @@ function JeuPrincipal() {
 
       case "info":
       case "clue":
-        // Affiche juste le message d'info
-        setDialogueMessage(item.dialogue);
-        setDialogueTitle(null);
+        if (item.image && item.type === "clue") {
+          setActiveClue(item);
+        } else {
+          setDialogueMessage(item.description || item.dialogue);
+          setDialogueTitle(item.type === "clue" ? "Indice" : "Information");
+        }
         break;
 
       case "exit":
         // Logique de fin simple pour tester
         const hasKey = inventory.some((i) => i.id === item.requiredItem);
         if (hasKey) {
-          setDialogueTitle("VICTOIRE !");
-          setDialogueMessage("Tu es sorti par les égouts !");
+          clearInterval(intervalRef.current);
+          setIsTimerRunning(false);
+          navigate("/Fin", {
+            state: {
+              win: true,
+              reason:
+                item.successMessage ||
+                "Mission accomplie ! Vous vous êtes échappé.",
+              inventory: inventory,
+              timeLeft: timeLeft,
+            },
+          });
         } else {
           setDialogueMessage(item.lockedMessage);
           setDialogueTitle(null);
@@ -232,9 +275,12 @@ function JeuPrincipal() {
         position: "relative",
       }}
     >
-      {/* HUD SIMPLIFIÉ (Sans Chrono) */}
-
-      {/* Ici on mettra le composant HUD avec le timer et le conteur des points */}
+      <audio
+        ref={audioRef}
+        src={AmbianceSound}
+        loop
+        style={{ display: "none" }}
+      />
       <div
         style={{
           position: "absolute",
@@ -299,9 +345,10 @@ function JeuPrincipal() {
             alignItems: "center",
             pointerEvents: "none", // Permet de cliquer à travers si nécessaire
           }}
-        >
-        </div>
+        ></div>
       )}
+
+      <IndiceModal clue={activeClue} onClose={() => setActiveClue(null)} />
 
       <PuzzleModal
         puzzle={activePuzzle}

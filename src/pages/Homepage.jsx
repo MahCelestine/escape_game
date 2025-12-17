@@ -77,7 +77,7 @@ function Homepage() {
             <span className="stat-label">objets à voler</span>
           </div>
           <div className="stat-item">
-            <span className="stat-number">6</span>
+            <span className="stat-number">5</span>
             <span className="stat-label">salles à explorer</span>
           </div>
         </div>
