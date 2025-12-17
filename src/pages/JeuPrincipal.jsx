@@ -302,8 +302,7 @@ function JeuPrincipal() {
             alignItems: "center",
             pointerEvents: "none", // Permet de cliquer à travers si nécessaire
           }}
-        >
-        </div>
+        ></div>
       )}
 
       <PuzzleModal
