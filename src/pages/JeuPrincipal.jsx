@@ -5,7 +5,7 @@ import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
 import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
-import BoiteDialogue from "../components/BoiteDialogue";
+import BoiteDialogue from '../components/BoiteDialogue';
 
 const GAME_DURATION = 20 * 60 * 1000;
 
@@ -221,9 +221,6 @@ function JeuPrincipal() {
     // 3. Feedback
     setDialogueTitle("Système piraté !");
     setDialogueMessage(`Vous avez obtenu : ${rewardItem.name}`);
-
-    // 4. Fermer la modale
-    setActivePuzzle(null);
   };
 
   return (
@@ -302,7 +299,8 @@ function JeuPrincipal() {
             alignItems: "center",
             pointerEvents: "none", // Permet de cliquer à travers si nécessaire
           }}
-        ></div>
+        >
+        </div>
       )}
 
       <PuzzleModal
