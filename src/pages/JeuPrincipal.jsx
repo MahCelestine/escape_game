@@ -5,6 +5,7 @@ import { ROOMS_DATA, GAME_CONFIG, ITEMS_DB } from "../data/data";
 import Inventaire from "../components/Inventaire";
 import HUD from "../components/HUD";
 import PuzzleModal from "../components/PuzzleModal";
+import ItemInventaire from "../components/ItemInventaire";
 
 const GAME_DURATION = 0.1 * 60 * 1000;
 
@@ -22,6 +23,8 @@ function JeuPrincipal() {
   const navigate = useNavigate();
   const intervalRef = useRef(null);
   const startTimeRef = useRef(null);
+  const hasTimerStarted = useRef(false);
+
 
   const formatTime = (ms) => {
     if (ms <= 0) return "00:00";
@@ -116,6 +119,12 @@ function JeuPrincipal() {
     // Naviguer vers l'écran de fin
     navigate("/Fin");
   };
+
+    useEffect(() => {
+    if (inventory.length == 1 && !hasTimerStarted.current){
+      startTimer();
+    }
+  }, [inventory]);
 
   // --- Nettoyage du timer ---
   useEffect(() => {
