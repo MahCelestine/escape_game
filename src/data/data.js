@@ -2,10 +2,9 @@ import galleryBg from "../assets/img/Galerie.jpg";
 import officeBg from "../assets/img/Bureau.jpg";
 import storageBg from "../assets/img/Stockage.jpg";
 import surveillanceBg from "../assets/img/Salle de surveillance casier fermé.jpg";
-import basementBg from "../assets/img/Sous-sol.jpg";
 
 // Vidéo
-// import basementBg from "../assets/img/Sous-sol video.gif";
+import basementBg from "../assets/video/Sous-sol.mp4";
 
 // Inventaire Items
 import BadgeIcon from "../assets/img/inventory/badge.png";
@@ -173,11 +172,10 @@ export const ROOMS_DATA = {
         image: NoteIMG,
         description: "Une image placée sur un livre",
         style: {
-          top: "55%",
-          left: "45%",
+          top: "45%",
+          left: "75%",
           width: "10%",
-          height: "5%",
-          border: "red 2px solid",
+          height: "7.5%",
         },
       },
       {
@@ -299,11 +297,10 @@ export const ROOMS_DATA = {
         image: NoteIMG,
         description: "Une feuille placée sur le bureau",
         style: {
-          top: "55%",
-          left: "45%",
+          top: "80%",
+          left: "67.5%",
           width: "10%",
           height: "5%",
-          border: "red 2px solid",
         },
       },
       {
@@ -333,7 +330,6 @@ export const ROOMS_DATA = {
           left: "10%",
           width: "15%",
           height: "60%",
-          border: "2px solid teal",
         },
       },
     ],
@@ -344,12 +340,13 @@ export const ROOMS_DATA = {
     id: "basement",
     name: "Tunnel de Maintenance",
     background: basementBg,
+    backgroundType: "video",
     exits: [
       {
         target: "storage",
         label: "Remonter",
         arrow: "up",
-        style: { top: "10%", left: "40%", width: "20%", height: "10%" },
+        style: { top: "12.5%", left: "40%", width: "20%", height: "10%" },
       },
     ],
     interactables: [
@@ -360,7 +357,12 @@ export const ROOMS_DATA = {
         lockedMessage:
           "La porte blindée est verrouillée. Il y a un lecteur de badge rouge.",
         successMessage: "BIP VALIDÉ ! La porte s'ouvre.",
-        style: { top: "60%", left: "35%", width: "30%", height: "20%" },
+        style: {
+          top: "35%",
+          left: "40%",
+          width: "20%",
+          height: "40%",
+        },
       },
 
       {
