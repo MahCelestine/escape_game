@@ -75,14 +75,6 @@ const PuzzleSliding = ({ data, onSuccess }) => {
     }
   };
 
-  // --- FONCTION DE TRICHE (DEBUG) ---
-  const handleAutoSolve = () => {
-    // On remet les tuiles dans l'ordre parfait : [0, 1, 2, ... 8]
-    const solvedState = Array.from({ length: TILE_COUNT }, (_, i) => i);
-    setTiles(solvedState);
-    checkWin(solvedState); // On lance la vérification de victoire
-  };
-
   return (
     <div
       style={{
@@ -134,11 +126,9 @@ const PuzzleSliding = ({ data, onSuccess }) => {
                 backgroundImage: `url(${data.image})`,
 
                 // 1. On force l'image à faire EXACTEMENT 300px x 300px
-                // Cela écrase l'image si elle n'est pas carrée, mais assure que le puzzle est parfait.
                 backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
 
-                // 2. On positionne l'image en négatif (on décale l'image vers le haut/gauche)
-                // Ex: pour la case (1,0) [milieu haut], on décale de -100px en X
+                // 2. On positionne l'image en négatif
                 backgroundPosition: `-${correctCol * TILE_SIZE}px -${
                   correctRow * TILE_SIZE
                 }px`,
@@ -149,27 +139,6 @@ const PuzzleSliding = ({ data, onSuccess }) => {
           );
         })}
       </div>
-
-      {/* --- BOUTON DE TRICHE --- */}
-      {!isSolved && (
-        <button
-          onClick={handleAutoSolve}
-          style={{
-            marginTop: "10px",
-            padding: "5px 10px",
-            backgroundColor: "#ef4444", // Rouge pour dire "Attention triche"
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "10px",
-            opacity: 0.7,
-          }}
-          title="Pour les développeurs pressés"
-        >
-          🛠️ RÉSOLUTION AUTO
-        </button>
-      )}
 
       {/* Aide visuelle : Modèle */}
       <div style={{ textAlign: "center", fontSize: "12px", color: "#888" }}>

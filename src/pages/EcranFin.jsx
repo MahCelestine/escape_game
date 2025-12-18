@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import WinVidéo from "../assets/video/Fin Escape Game.mp4";
+import WinVidéo from "../assets/video/Outro avec musique.mp4";
 import "../assets/css/Homepage.css";
 
 function EcranFin() {

@@ -23,11 +23,9 @@ import Taquin from "../assets/img/enigma/enigme2.png";
 
 // Trigger
 import TrapdoorOpenIMG from "../assets/img/icons/Trappe Doit Fossilisé.png";
-import DeskOpenIMG from "../assets/img/icons/Bureau.png";
 
 // Indices
 import NoteIMG from "../assets/img/indices/indice5.png";
-import ClueNoteIMG from "../assets/img/indices/camera-indice.jpg";
 
 export const GAME_CONFIG = {
   startingRoom: "gallery",
@@ -291,18 +289,6 @@ export const ROOMS_DATA = {
       },
     ],
     interactables: [
-      {
-        id: "clue_code",
-        type: "clue",
-        image: NoteIMG,
-        description: "Une feuille placée sur le bureau",
-        style: {
-          top: "80%",
-          left: "67.5%",
-          width: "10%",
-          height: "5%",
-        },
-      },
       {
         id: "locker_puzzle",
         itemId: "badge",

@@ -9,7 +9,7 @@ function BoiteDialogue({ message, title, onClose, duration = 3000 }) {
       setIsVisible(true);
       setIsClosing(false);
 
-      // Auto-fermeture après la durée spécifiée (sauf si duration = 0)
+      // Auto-fermeture
       if (duration > 0) {
         const timer = setTimeout(() => {
           handleClose();
@@ -24,58 +24,77 @@ function BoiteDialogue({ message, title, onClose, duration = 3000 }) {
     setTimeout(() => {
       setIsVisible(false);
       if (onClose) onClose();
-    }, 300);
+    }, 300); // Correspond à la durée de l'animation CSS
   };
 
+  // Si on n'a rien à afficher et qu'on est pas en train de fermer, on retourne null
   if (!isVisible && !message && !title) return null;
 
   return (
     <div
       style={{
         position: "fixed",
-        bottom: "20px",
+        bottom: "30px",
         left: "50%",
-        transform: "translateX(-50%)",
+        // L'animation se fait via la transformation CSS plus bas
+        transform: isClosing ? "translate(-50%, 20px)" : "translate(-50%, 0)",
+        opacity: isClosing ? 0 : 1,
+        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)", // Animation fluide "Apple style"
         zIndex: 1000,
         maxWidth: "600px",
         width: "90%",
+        pointerEvents: "none", // Pour cliquer au travers si besoin (sauf sur la boite elle-même)
       }}
     >
       <div
         style={{
-          backgroundColor: "#1a1a2e",
+          backgroundColor: "rgba(18, 25, 40, 0.75)",
           border: "1px solid rgba(148, 163, 184, 0.3)",
-          background: "rgba(18, 25, 40, 0.85)",
-          borderRadius: "15px",
+          backdropFilter: "blur(8px)",
+          borderLeft: "4px solid #fbbf24",
+          borderRadius: "8px",
           padding: "20px 25px",
-          position: "relative",
+          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.6)",
+          pointerEvents: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
         }}
       >
         {/* Titre */}
         {title && (
-          <h3
+          <div
             style={{
-              margin: "0 0 10px 0",
-              fontSize: "18px",
-              fontWeight: "bold",
-              color: "#fff",
-              fontFamily: "Calibri",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            {title}
-          </h3>
+            <h3
+              style={{
+                margin: 0,
+                fontSize: "14px",
+                fontWeight: "bold",
+                color: "#fbbf24", // Couleur Or/Jaune (style Cyberpunk/Loot)
+                fontFamily: "monospace", // Même police que le Timer
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
+            >
+              {title}
+            </h3>
+          </div>
         )}
 
         {/* Message */}
         {message && (
           <p
             style={{
-              color: "#ffffff",
+              color: "#e2e8f0", // Blanc cassé pour ne pas agresser les yeux
               margin: 0,
               fontSize: "16px",
-              fontFamily: "Calibri",
+              fontFamily: "'Segoe UI', Roboto, sans-serif", // Police très lisible
               lineHeight: "1.5",
-              paddingRight: title ? "0" : "30px",
             }}
           >
             {message}

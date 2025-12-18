@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/Homepage.css";
 import galleryImage from "../assets/img/Musée De Nuit.jpg";
-import introVideo from "../assets/video/Vidéo intro.mp4";
+import introVideo from "../assets/video/Intro avec musique.mp4";
 
 function Homepage() {
   const navigate = useNavigate();

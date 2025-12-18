@@ -186,8 +186,10 @@ function JeuPrincipal() {
         if (fullItem) {
           setInventory([...inventory, fullItem]);
           // Petit feedback visuel simple (alert pour l'instant)
-          setDialogueTitle("Objet volé !");
-          setDialogueMessage(`${fullItem.name} (Valeur: $${fullItem.value})`);
+          if (fullItem.type !== "trigger") {
+            setDialogueTitle("Objet volé !");
+            setDialogueMessage(`${fullItem.name} (Valeur: $${fullItem.value})`);
+          }
         }
         break;
 
@@ -262,8 +264,10 @@ function JeuPrincipal() {
     });
 
     // 3. Feedback
-    setDialogueTitle("Système piraté !");
-    setDialogueMessage(`Vous avez obtenu : ${rewardItem.name}`);
+    if (rewardItem.type !== "trigger") {
+      setDialogueTitle("Système piraté !");
+      setDialogueMessage(`Vous avez obtenu : ${rewardItem.name}`);
+    }
   };
 
   return (
