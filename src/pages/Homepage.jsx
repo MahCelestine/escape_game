@@ -49,8 +49,8 @@ function Homepage() {
       <div className="home-overlay" />
 
       <div className="home-content fade-in">
-        <h1 className="home-title">LE CASSE</h1>
-        <h2 className="home-subtitle glow-gold">DU SIÈCLE</h2>
+        <h1 className="home-title">LE BRAQUAGE</h1>
+        <h2 className="home-subtitle glow-gold">FANTÔME</h2>
 
         <p className="home-description">
           Infiltrez le musée, dérobez les trésors et trouvez une sortie avant
