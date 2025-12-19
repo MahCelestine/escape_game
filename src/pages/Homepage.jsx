@@ -50,7 +50,7 @@ function Homepage() {
 
       <div className="home-content fade-in">
         <h1 className="home-title">LE BRAQUAGE</h1>
-        <h2 className="home-subtitle glow-gold">FANTÔME</h2>
+        <h2 className="home-subtitle glow-gold">FANTÔMtE</h2>
 
         <p className="home-description">
           Infiltrez le musée, dérobez les trésors et trouvez une sortie avant
